@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>03 物品详情与预约 · 原型</title>
+<link rel="stylesheet" href="assets/proto.css">
+<style>
+  .crumb{padding:16px 40px 0;font-size:12px;color:var(--ink3)}
+  .crumb b{color:var(--ink2);font-weight:400}
+  .detail{display:flex;gap:44px;padding:18px 40px 0}
+  .gallery{width:460px;flex:none}
+  .main-img{height:330px}
+  .thumbs{display:flex;gap:10px;margin-top:10px}
+  .thumbs .ph{width:78px;height:78px}
+  .thumbs .ph.on{border:2px solid var(--primary)}
+  .info{flex:1;min-width:0}
+  .info h1{margin:0 0 12px;font-size:22px;font-weight:600;line-height:1.4;letter-spacing:.2px}
+  .info .tags{display:flex;gap:6px;margin-bottom:20px}
+
+  .qbox{background:#FAFAF6;border:1px solid var(--line2);border-radius:8px;padding:16px 18px;margin-bottom:16px}
+  .qbox .top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+  .qbox .big{font-size:15px}
+  .qbox .big b{font-size:26px;font-weight:600;color:var(--primary-d);margin-right:2px;font-variant-numeric:tabular-nums}
+  .qbox .of{color:var(--ink3);font-size:12px}
+  .qbar{height:6px;background:#E8E8E1;border-radius:3px;overflow:hidden;display:flex}
+  .qbar i{display:block;height:100%;background:var(--primary)}
+  .qbar u{display:block;height:100%;background:#CFCFC6}
+  .qbox .legend{display:flex;gap:16px;margin-top:9px;font-size:11.5px;color:var(--ink3)}
+  .qbox .legend span{display:flex;align-items:center;gap:5px}
+  .sw{width:8px;height:8px;border-radius:2px;display:inline-block}
+
+  .station{display:flex;gap:12px;padding:14px 16px;border:1px solid var(--line);border-radius:8px;margin-bottom:20px;align-items:flex-start}
+  .station .ico{width:34px;height:34px;border-radius:7px;background:var(--primary-s);color:var(--primary-d);display:flex;
+    align-items:center;justify-content:center;font-size:13px;flex:none}
+  .station b{display:block;font-size:13px;margin-bottom:2px}
+  .station span{font-size:12px;color:var(--ink3);display:block;line-height:1.7}
+
+  .buyrow{display:flex;align-items:center;gap:14px}
+  .stepper{display:flex;align-items:center;height:38px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff}
+  .stepper .s{width:38px;height:100%;display:flex;align-items:center;justify-content:center;color:var(--ink2);font-size:15px;background:#FAFAF6}
+  .stepper .v{width:52px;text-align:center;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+  .buyrow .btn{height:38px;flex:1}
+  .reserve-note{margin-top:10px;font-size:11.5px;color:var(--ink3);display:flex;gap:14px}
+
+  .meta-row{display:flex;gap:28px;margin-top:20px;padding-top:16px;border-top:1px dashed var(--line2);font-size:12px;color:var(--ink3)}
+  .meta-row b{color:var(--ink2);font-weight:500}
+
+  .lower{display:flex;gap:24px;padding:24px 40px 34px}
+  .lower .l{width:460px;flex:none}
+  .lower .r{flex:1;min-width:0}
+  .desc{font-size:13px;color:#3C3C38;line-height:1.9}
+  .desc p{margin:0 0 10px}
+  .desc p:last-child{margin-bottom:0}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="doc-head">
+    <div class="meta">P03 / 用户端<br>路由 <b>/items/:id</b><br>F4 预约与占用 · P0</div>
+    <h1>物品详情与预约</h1>
+    <div class="sub">余量、驿站信息、预约动作与流转履历集中在这一页，是「浏览 → 操作」的转换点</div>
+  </div>
+
+  <div class="frame">
+    <div class="frame-bar"><b>物品详情 · 有货态</b><span>1280 × 约 980</span></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="brand"><span class="logo">拾</span><span>拾光 · 校园旧物捐赠</span></div>
+        <nav class="nav"><a class="on">发现</a><a>捐赠</a><a>我的记录</a></nav>
+        <div class="userbox"><span class="avatar">李</span><span>李明 · 2022010101</span></div>
+      </div>
+
+      <div class="crumb">发现 / 教材书籍 / <b>高等数学 第七版（上下册）+ 习题册</b></div>
+
+      <div class="detail">
+
+        <div class="gallery">
+          <div class="ph main-img"><span>图片占位 · 主图 4:3</span></div>
+          <div class="thumbs">
+            <div class="ph on"><span>1</span></div>
+            <div class="ph"><span>2</span></div>
+            <div class="ph"><span>3</span></div>
+            <div class="ph"><span>4</span></div>
+            <div class="ph"><span>视频</span></div>
+          </div>
+        </div>
+
+        <div class="info">
+          <h1>高等数学 第七版（上下册）+ 习题册</h1>
+          <div class="tags">
+            <span class="tag">教材书籍</span>
+            <span class="tag green">成色 · 良好</span>
+            <span class="tag blue">在架</span>
+            <span class="tag">减碳 ≈ 5.4 kg</span>
+          </div>
+
+          <div class="qbox">
+            <div class="top">
+              <div class="big"><b>3</b> 件可领<i class="mk">1</i></div>
+              <div class="of">本批次共 5 件</div>
+            </div>
+            <div class="qbar">
+              <i style="width:20%"></i>
+              <u style="width:20%"></u>
+            </div>
+            <div class="legend">
+              <span><i class="sw" style="background:var(--primary)"></i>可领 3</span>
+              <span><i class="sw" style="background:#CFCFC6"></i>已预约 1</span>
+              <span><i class="sw" style="background:#CFCFC6"></i>已领走 1</span>
+            </div>
+          </div>
+
+          <div class="station">
+            <div class="ico">驿</div>
+            <div>
+              <b>一食堂西侧 · 爱心驿站</b>
+              <span>营业时间：周一至周五 10:00—18:00　｜　周末 10:00—16:00</span>
+              <span>领取时请出示 8 位领取码，工作人员核销后放行</span>
+            </div>
+            <i class="mk">2</i>
+          </div>
+
+          <div class="buyrow">
+            <div class="stepper">
+              <div class="s">−</div>
+              <div class="v">1</div>
+              <div class="s">＋</div>
+            </div>
+            <button class="btn btn-accent lg" style="flex:1">立即预约</button>
+            <i class="mk">3</i>
+          </div>
+          <div class="reserve-note">
+            <span>最多可选 3 件</span>
+            <span>预约后 3 天内到驿站领取，超时自动释放</span>
+            <span>最多同时持有 2 个未领取预约</span>
+          </div>
+
+          <div class="meta-row">
+            <div>捐赠人 <b>某同学（已脱敏）</b></div>
+            <div>提交时间 <b>2026-11-18 14:20</b></div>
+            <div>入库时间 <b>2026-11-19 09:30</b></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="lower">
+
+        <div class="l">
+          <div class="card">
+            <div class="card-hd"><h3>物品描述</h3></div>
+            <div class="card-bd desc">
+              <p>上下册齐全，习题册也在。当年买的时候是全新，自己只用了一个学期，页内没有笔记，只有少量铅笔划线，可以擦掉。</p>
+              <p>书脊完好，没有缺页。适合大一新生，配套的习题册答案手写在最后几页，介意的话可以撕掉。</p>
+              <p class="dim" style="font-size:12px">捐赠人备注：如果需要，书里夹的课程笔记也可以一起带走。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="r">
+          <div class="card">
+            <div class="card-hd">
+              <h3>流转履历<i class="mk">4</i></h3>
+              <span class="f11 dim">每一步都有记录，可追溯到操作人</span>
+            </div>
+            <div class="card-bd">
+              <ul class="tl">
+                <li class="done">
+                  <div class="tx"><b>提交捐赠</b>　某同学<span class="tm">11-18 14:20</span></div>
+                </li>
+                <li class="done">
+                  <div class="tx"><b>审核通过</b>　驿站管理员<span class="tm">11-18 16:02</span></div>
+                </li>
+                <li class="done">
+                  <div class="tx"><b>收货入库</b>　驿站管理员　共 5 件<span class="tm">11-19 09:30</span></div>
+                </li>
+                <li class="done">
+                  <div class="tx"><b>被预约 1 件</b>　某同学<span class="tm">11-19 10:15</span></div>
+                </li>
+                <li class="done">
+                  <div class="tx"><b>核销出库 1 件</b>　驿站管理员<span class="tm">11-20 11:40</span></div>
+                </li>
+                <li class="grey">
+                  <div class="tx dim">当前在架 · 剩余 3 件<i class="mk">5</i></div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="notes">
+    <h3>交互说明</h3>
+    <ol>
+      <li><b>余量区。</b>「3 件可领」为派生值（总量 − 已预约 − 已领走），不是独立字段。进度条按三段比例渲染：绿色为可领、灰色为已占用。余量为 1 时数字转为暖橙，为 0 时整区变为灰底并显示「已约满」。</li>
+      <li><b>驿站卡片。</b>必须写清「在哪、什么时候开、凭什么领」三件事。这是领取者白跑一趟的主要成因，所以在详情页直接给出完整信息，不藏在二级页面。</li>
+      <li><b>预约按钮。</b>点击后按钮转 loading 并禁用，防止连点造成重复预约。成功后弹出领取码卡片（8 位码 + 到期时间 + 驿站地址），并提供「加入日历提醒」的次要动作。失败分四种情况，文案各不相同：
+        <div class="mt8" style="font-size:12px;color:var(--ink2);line-height:2">
+          余量不足 →「已被他人预约，当前仅剩 <b>1</b> 件」（并立即刷新余量）<br>
+          超过上限 →「最多同时持有 2 个未领取预约，请先领取或取消」<br>
+          批次已下架 →「该物品已被下架」（自动返回发现页）<br>
+          未登录 → 跳登录，成功后回跳到本页
+        </div>
+      </li>
+      <li><b>流转履历。</b>合并批次事件与预约事件，按时间升序。已完成节点为实心绿点，进行中为空心点，未来节点为灰点。学生视角下所有他人信息脱敏为「某同学」，管理员视角显示完整姓名——同一组件，按角色字段过滤。</li>
+      <li><b>履历的动效。</b>进入视口时逐节点淡入上移（错峰 80ms），使用 <span class="tag">IntersectionObserver</span> 触发；系统开启「减少动态效果」时降级为直接显示。这是本项目的视觉记忆点，也是课程「CSS 动画」章节的直接应用。</li>
+    </ol>
+    <div class="tip">本页同时承担「未登录也能看」的职责。未登录时预约按钮文案改为「登录后预约」，点击直接跳登录，不弹窗——少一步就少一批流失。</div>
+  </div>
+
+  <div class="pager">
+    <a href="02-发现.html">← 02 发现</a>
+    <a href="04-捐赠登记.html">04 捐赠登记 →</a>
+  </div>
+
+</div>
+</body>
+</html>

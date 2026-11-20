@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>01 登录 · 原型</title>
+<link rel="stylesheet" href="assets/proto.css">
+<style>
+  .login{display:flex;height:720px}
+  .lg-left{width:600px;flex:none;background:#F4F8F4;padding:0 64px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid var(--line2)}
+  .lg-left .brand{font-size:16px;margin-bottom:44px}
+  .lg-left h1{font-size:27px;line-height:1.45;font-weight:600;margin:0 0 12px;letter-spacing:.3px}
+  .lg-left .slogan{color:var(--ink2);font-size:13.5px;margin:0 0 30px}
+  .feat{display:flex;gap:10px;margin-bottom:14px;align-items:flex-start}
+  .feat .no{width:19px;height:19px;border-radius:50%;background:var(--primary-s);color:var(--primary-d);font-size:10.5px;
+    display:flex;align-items:center;justify-content:center;flex:none;margin-top:1px;font-weight:600}
+  .feat b{display:block;font-size:13px;font-weight:600;margin-bottom:1px}
+  .feat span{font-size:12px;color:var(--ink3)}
+  .lg-art{margin-top:26px}
+  .lg-right{flex:1;display:flex;align-items:center;justify-content:center;background:#fff}
+  .lg-form{width:344px}
+  .lg-form h2{margin:0 0 6px;font-size:20px;font-weight:600}
+  .lg-form .lead-t{color:var(--ink3);font-size:12.5px;margin:0 0 30px}
+  .lg-form .field{margin-bottom:20px}
+  .lg-form .input{height:38px}
+  .lg-form .forgot{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--ink3);margin:-4px 0 22px}
+  .demo{margin-top:26px;background:#FAFAF6;border:1px solid var(--line2);border-radius:6px;padding:12px 14px;font-size:11.5px;color:var(--ink2);line-height:1.9}
+  .demo b{color:var(--ink);font-weight:600}
+  .demo .code{font-family:ui-monospace,Menlo,Consolas,monospace;background:#fff;border:1px solid var(--line2);border-radius:3px;padding:0 4px;font-size:11px}
+  .lg-foot{height:44px;border-top:1px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:11.5px;color:var(--ink3)}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="doc-head">
+    <div class="meta">P01 / 公共<br>路由 <b>/login</b><br>优先级 P0（支撑页）</div>
+    <h1>登录</h1>
+    <div class="sub">学号 + 密码登录，登录后按角色进入用户端或管理后台</div>
+  </div>
+
+  <div class="frame">
+    <div class="frame-bar"><b>登录 · 默认态</b><span>1280 × 720</span></div>
+    <div class="screen">
+      <div class="login">
+
+        <div class="lg-left">
+          <div class="brand">
+            <div class="row" style="align-items:center;gap:9px">
+              <span class="logo" style="width:28px;height:28px;border-radius:7px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600">拾</span>
+              <span>拾光 · 校园旧物捐赠</span>
+            </div>
+          </div>
+          <h1>把用不上的东西，<br>交到下一位同学手里</h1>
+          <p class="slogan">本校毕业季闲置物品捐赠与领取平台</p>
+
+          <div class="feat"><span class="no">1</span><div><b>六项填完就能捐</b><span>不填一堆字段，照片会自动压缩</span></div></div>
+          <div class="feat"><span class="no">2</span><div><b>每件物品都有流转履历</b><span>谁捐的、何时入库、被谁领走，全程可查</span></div></div>
+          <div class="feat"><span class="no">3</span><div><b>减碳量看得见</b><span>你的每次捐赠都会被折算成 CO₂e 减排</span></div></div>
+
+          <div class="lg-art">
+            <div class="ph" style="height:150px;border-radius:8px"><span>插画占位 · 毕业季 · 旧物传递</span></div>
+          </div>
+        </div>
+
+        <div class="lg-right">
+          <div class="lg-form">
+            <h2>登录</h2>
+            <p class="lead-t">使用学号登录，管理员请使用后台账号</p>
+
+            <div class="field">
+              <label class="label">学号 / 管理员账号<i class="mk">1</i></label>
+              <div class="input placeholder">请输入学号</div>
+            </div>
+
+            <div class="field">
+              <label class="label">密码<i class="mk">2</i></label>
+              <div class="input placeholder">请输入密码</div>
+            </div>
+
+            <div class="forgot">
+              <span>忘记密码？请联系学生资助中心重置</span>
+            </div>
+
+            <button class="btn btn-primary lg block">登 录<i class="mk">3</i></button>
+
+            <div class="demo">
+              <b>演示账号</b><i class="mk">4</i><br>
+              管理员　<span class="code">admin01</span> / <span class="code">admin123</span><br>
+              学生　　<span class="code">2022010101</span> / <span class="code">123456</span><br>
+              学生（无记录）<span class="code">2023010202</span> / <span class="code">123456</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="lg-foot">《Web前端开发技术与UI设计》期末大作业 · 第三小组 · 2026</div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <h3>交互说明</h3>
+    <ol>
+      <li><b>学号输入。</b>回车即跳到密码框。失焦时仅校验非空与格式（字母数字 6—14 位），不发起请求；格式错误时输入框转红并在下方显示「学号格式不正确」。</li>
+      <li><b>密码输入。</b>支持小眼睛切换明文。连续 5 次失败后，本次会话锁定 60 秒并提示「尝试次数过多，请稍后再试」。</li>
+      <li><b>登录按钮。</b>点击后按钮进入 loading 态并禁用，防重复提交。成功时按 <span class="tag">role</span> 分流：<b>学生</b>跳 <span class="tag">/discover</span>，<b>管理员</b>跳 <span class="tag">/admin/items</span>。若登录前被守卫拦截，登录后<b>回跳原页面</b>。</li>
+      <li><b>演示账号区。</b>仅用于评审与演示，正式交付时隐藏。点击任意账号可一键填充，方便现场演示。</li>
+      <li><b>失败提示统一文案。</b>账号不存在与密码错误统一返回「学号或密码错误」，<b>不区分</b>二者，避免账号枚举。后端返回 401，前端不刷新页面，仅在密码框下方插入红色提示条。</li>
+    </ol>
+    <div class="tip">本页不提供「注册」入口。账号由管理方统一导入（对应需求说明书 §3.2「不做真实身份认证对接，用学号模拟」），因此在界面上不给用户预期之外的能力。</div>
+  </div>
+
+  <div class="pager">
+    <a href="00-原型总览.html">← 返回总览</a>
+    <a href="02-发现.html">02 发现 →</a>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>08 统计看板（后台）· 原型</title>
+<link rel="stylesheet" href="assets/proto.css">
+<style>
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:8px;padding:15px 18px}
+  .kpi .lb{font-size:11.5px;color:var(--ink3);margin-bottom:7px;display:flex;align-items:center;justify-content:space-between}
+  .kpi .vv{font-size:26px;font-weight:600;line-height:1.2;font-variant-numeric:tabular-nums;letter-spacing:.5px}
+  .kpi .vv small{font-size:12px;font-weight:400;color:var(--ink3);margin-left:3px}
+  .kpi .df{font-size:11.5px;margin-top:6px;color:var(--ink3)}
+  .kpi .df b{color:var(--primary);font-weight:600}
+  .kpi .df.down b{color:var(--danger)}
+
+  .row2{display:flex;gap:18px;align-items:flex-start;margin-bottom:18px}
+  .c440{width:440px;flex:none}
+  .grow{flex:1;min-width:0}
+
+  .legend2{display:flex;flex-direction:column;gap:9px;font-size:12px;padding-left:8px}
+  .legend2 .li{display:flex;align-items:center;gap:7px}
+  .legend2 .sw{width:9px;height:9px;border-radius:2px;flex:none}
+  .legend2 .nm{color:var(--ink2);flex:1}
+  .legend2 .pc{font-variant-numeric:tabular-nums;color:var(--ink3);font-size:11.5px}
+
+  .donutwrap{display:flex;align-items:center;gap:26px;padding:6px 4px}
+
+  .bar-x{display:flex;justify-content:space-between;padding:0 6px;margin-top:6px}
+  .bar-x span{font-size:11px;color:var(--ink3);flex:1;text-align:center}
+  .yax{display:flex;flex-direction:column;justify-content:space-between;height:150px;font-size:10.5px;color:#B8B8B0;text-align:right;width:26px;flex:none;padding-right:4px}
+  .bararea{display:flex;gap:8px}
+
+  .stale td{font-size:12px}
+  .stale .d{color:var(--danger);font-weight:600}
+  .funnel .f .bar{position:relative}
+  .funnel .f .bar em{position:absolute;right:9px;font-style:normal;font-size:11px;color:var(--primary-d);opacity:.75}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="doc-head">
+    <div class="meta">P08 / 管理后台<br>路由 <b>/admin/dashboard</b><br>F7 统计看板 · P1</div>
+    <h1>统计看板</h1>
+    <div class="sub">管理员每月要向中心交报表，这一页把「要报的数字」直接算好</div>
+  </div>
+
+  <div class="frame">
+    <div class="frame-bar"><b>统计看板 · 本季度</b><span>1280 × 约 1080</span></div>
+    <div class="screen">
+      <div class="admin">
+
+        <aside class="side">
+          <div class="side-brand"><span>拾</span>拾光 管理后台</div>
+          <nav>
+            <a>物品管理</a>
+            <a>核销台</a>
+            <a class="on">统计看板</a>
+          </nav>
+          <div class="side-foot">管理员 admin01<br>学生资助中心</div>
+        </aside>
+
+        <div class="main">
+          <div class="admin-top">
+            <h2>统计看板</h2>
+            <div class="right">
+              <span class="select" style="width:120px;height:30px;background:#fff"><span>本季度</span><span class="caret">▾</span></span>
+              <i class="mk">1</i>
+              <a>导出 CSV</a>
+            </div>
+          </div>
+
+          <div class="body">
+
+            <div class="kpis">
+              <div class="kpi">
+                <div class="lb">在架批次</div>
+                <div class="vv">68<small>批</small></div>
+                <div class="df">较上季 <b>+12</b></div>
+              </div>
+              <div class="kpi">
+                <div class="lb">本季核销</div>
+                <div class="vv">214<small>件</small></div>
+                <div class="df">较上季 <b>+38%</b></div>
+              </div>
+              <div class="kpi">
+                <div class="lb">碳减排累计<i class="mk">2</i></div>
+                <div class="vv">326<small>kg CO₂e</small></div>
+                <div class="df">估算值 · 点击查看口径</div>
+              </div>
+              <div class="kpi">
+                <div class="lb">平均在架天数</div>
+                <div class="vv">8.4<small>天</small></div>
+                <div class="df down">较上季 <b>−1.2 天</b></div>
+              </div>
+            </div>
+
+            <div class="row2">
+
+              <div class="c440">
+                <div class="card">
+                  <div class="card-hd"><h3>品类分布<i class="mk">3</i></h3><span class="f11 dim">按已核销件数</span></div>
+                  <div class="card-bd" style="padding:16px 18px">
+                    <div class="donutwrap">
+                      <div class="donut" style="background:conic-gradient(#2F7D4F 0 38%,#4E9A6B 38% 60%,#7FBF95 60% 78%,#E8833A 78% 90%,#EBA96F 90% 96%,#CFCFC6 96% 100%)">
+                        <div class="ctr"><b>214</b><span>件已核销</span></div>
+                      </div>
+                      <div class="legend2">
+                        <div class="li"><i class="sw" style="background:#2F7D4F"></i><span class="nm">教材书籍</span><span class="pc">81 · 38%</span></div>
+                        <div class="li"><i class="sw" style="background:#4E9A6B"></i><span class="nm">衣物鞋帽</span><span class="pc">47 · 22%</span></div>
+                        <div class="li"><i class="sw" style="background:#7FBF95"></i><span class="nm">生活用品</span><span class="pc">39 · 18%</span></div>
+                        <div class="li"><i class="sw" style="background:#E8833A"></i><span class="nm">小家电与数码</span><span class="pc">26 · 12%</span></div>
+                        <div class="li"><i class="sw" style="background:#EBA96F"></i><span class="nm">文具杂物</span><span class="pc">13 · 6%</span></div>
+                        <div class="li"><i class="sw" style="background:#CFCFC6"></i><span class="nm">体育器材</span><span class="pc">8 · 4%</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grow">
+                <div class="card">
+                  <div class="card-hd"><h3>月度流转量<i class="mk">4</i></h3><span class="f11 dim">近 6 个月核销件数</span></div>
+                  <div class="card-bd" style="padding:18px 20px 14px">
+                    <div class="bararea">
+                      <div class="yax"><span>60</span><span>45</span><span>30</span><span>15</span><span>0</span></div>
+                      <div style="flex:1">
+                        <div class="bars" style="height:150px">
+                          <div class="b"><i style="height:38%"></i></div>
+                          <div class="b"><i style="height:30%"></i></div>
+                          <div class="b"><i style="height:22%"></i></div>
+                          <div class="b"><i style="height:55%"></i></div>
+                          <div class="b"><i style="height:88%"></i></div>
+                          <div class="b"><i style="height:72%"></i></div>
+                        </div>
+                        <div class="bar-x">
+                          <span>6月</span><span>7月</span><span>8月</span><span>9月</span><span>10月</span><span>11月</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="f11 dim" style="margin-top:12px">9—10 月为开学季高峰，11 月为毕业季前的次高峰；8 月为暑期低谷，符合校园场景规律。</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="row2" style="margin-bottom:0">
+
+              <div class="c440">
+                <div class="card">
+                  <div class="card-hd"><h3>转化漏斗<i class="mk">5</i></h3><span class="f11 dim">本季度</span></div>
+                  <div class="card-bd" style="padding:16px 18px">
+                    <div class="funnel">
+                      <div class="f">
+                        <div class="lbl"><span>提交登记</span><span>286 批次</span></div>
+                        <div class="bar" style="width:100%">100%</div>
+                      </div>
+                      <div class="f">
+                        <div class="lbl"><span>审核通过</span><span>261 批次</span></div>
+                        <div class="bar" style="width:91%">91%</div>
+                      </div>
+                      <div class="f">
+                        <div class="lbl"><span>收货上架</span><span>248 批次</span></div>
+                        <div class="bar" style="width:87%">87%</div>
+                      </div>
+                      <div class="f">
+                        <div class="lbl"><span>产生预约</span><span>203 批次</span></div>
+                        <div class="bar" style="width:71%">71%</div>
+                      </div>
+                      <div class="f" style="margin-bottom:0">
+                        <div class="lbl"><span>完成核销</span><span>186 批次</span></div>
+                        <div class="bar" style="width:65%">65%</div>
+                      </div>
+                    </div>
+                    <div class="f11 dim" style="margin-top:12px">最大流失出现在「上架 → 产生预约」（87% → 71%），说明部分物品上架后无人问津，可结合下方滞销清单排查品类结构。</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grow">
+                <div class="card">
+                  <div class="card-hd"><h3>滞销物品<i class="mk">6</i></h3><span class="f11 dim">在架超 30 天且未被领取</span></div>
+                  <table class="tb stale">
+                    <thead>
+                      <tr><th>物品</th><th style="width:96px">品类</th><th style="width:64px">余量</th><th style="width:86px">在架天数</th><th style="width:80px">操作</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>旧版线性代数教材（2015 版）</td><td><span class="tag">教材书籍</span></td><td>4 件</td><td class="d">46 天</td><td><a>下架</a></td></tr>
+                      <tr><td>网球拍 手柄缠带老化</td><td><span class="tag">体育器材</span></td><td>2 件</td><td class="d">41 天</td><td><a>下架</a></td></tr>
+                      <tr><td>玻璃水杯 无盖</td><td><span class="tag">生活用品</span></td><td>3 件</td><td>37 天</td><td><a>下架</a></td></tr>
+                      <tr><td>打印机墨盒（型号已停产）</td><td><span class="tag">小家电与数码</span></td><td>1 件</td><td>35 天</td><td><a>下架</a></td></tr>
+                      <tr><td>大学物理实验报告册（已写）</td><td><span class="tag">文具杂物</span></td><td>6 件</td><td>32 天</td><td><a>下架</a></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <h3>交互说明</h3>
+    <ol>
+      <li><b>时间范围。</b>本季度 / 本学期 / 自定义区间三选一，切换后所有指标与图表联动刷新。范围写入 URL，便于把某个视角直接发给同事。</li>
+      <li><b>碳减排口径。</b>数字旁有标注点，点击弹出计算说明：<b>Σ（品类单件估重 × 单位碳因子 × 已核销件数）</b>，并明确标注「估算值，仅用于公益可视化，不构成碳核算」。系数表随弹窗附上，可追溯到具体品类。<b>这一条必须做</b>，否则答辩时被问「系数哪来的」无法回答。</li>
+      <li><b>品类分布。</b>环形图按已核销件数统计，而非在架件数——后者会被滞销品拉偏。悬停扇区高亮并显示「品类 · 件数 · 占比」，点击可跳转到物品管理并按该品类过滤，形成「看数据 → 处理数据」的闭环。</li>
+      <li><b>月度流转量。</b>柱状图，单位是核销件数。9 月与 10 月的高峰是开学季，11 月是毕业季前——这条曲线本身就能说明平台的使用节律，答辩时是一个很好的叙事点。</li>
+      <li><b>转化漏斗。</b>五段漏斗对应闭环的五个关键节点，用于定位流失环节。当前最大流失在「上架 → 产生预约」，直接指向滞销问题，与右下角清单形成因果链。</li>
+      <li><b>滞销物品。</b>判定条件：<b>在架超过 30 天且已核销为 0</b>。30 天取自「平均在架天数 8.4 天」的约 3.5 倍，超过即视为异常。每条提供「下架」快捷操作，点击后进入下架确认（若有未核销预约会被拦截）。</li>
+    </ol>
+    <div class="tip">看板所有数字均为<b>服务端聚合</b>后返回，前端不做二次计算——保证管理员在汇报时引用的数字与数据库一致。对应接口 <span class="tag">GET /api/admin/stats/overview</span>，一次请求返回全部指标。</div>
+    <div class="tip red">图表在无数据时必须展示空状态（如「本季度还没有核销记录」），而不是渲染一个空白画布。这一条已列入 N1 四态处理的验收范围。</div>
+  </div>
+
+  <div class="pager">
+    <a href="07-核销台.html">← 07 核销台</a>
+    <a href="09-状态与异常.html">09 状态与异常 →</a>
+  </div>
+
+</div>
+</body>
+</html>

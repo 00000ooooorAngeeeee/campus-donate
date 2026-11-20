@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>02 发现 · 原型</title>
+<link rel="stylesheet" href="assets/proto.css">
+<style>
+  .banner{margin:24px 40px 0;background:#F4F8F4;border-radius:10px;padding:24px 30px;display:flex;align-items:center;justify-content:space-between;gap:30px}
+  .banner h2{margin:0 0 8px;font-size:22px;font-weight:600;letter-spacing:.3px}
+  .banner p{margin:0;color:var(--ink2);font-size:12.5px}
+  .banner .cd{display:inline-flex;align-items:baseline;gap:5px;margin-left:10px;color:var(--accent);font-weight:600;font-size:13px}
+  .banner .cd b{font-size:19px}
+  .stats{display:flex;gap:34px;flex:none}
+  .stat{text-align:right}
+  .stat b{display:block;font-size:22px;font-weight:600;line-height:1.25;font-variant-numeric:tabular-nums}
+  .stat span{font-size:11.5px;color:var(--ink3)}
+
+  .filters{margin:18px 40px 0;background:#fff;border:1px solid var(--line);border-radius:8px;padding:13px 18px}
+  .frow{display:flex;align-items:center;gap:9px}
+  .frow + .frow{margin-top:11px;padding-top:11px;border-top:1px dashed var(--line2)}
+  .frow .k{width:46px;flex:none;color:var(--ink3);font-size:12px}
+  .chip{height:26px;padding:0 13px;border:1px solid var(--line);border-radius:13px;display:inline-flex;align-items:center;
+    font-size:12px;background:#fff;color:var(--ink2);white-space:nowrap}
+  .chip.on{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:500}
+  .chip.multi.on{background:var(--primary-s);border-color:#CFE4D6;color:var(--primary-d)}
+  .search{margin-left:auto;display:flex;align-items:center;gap:0;width:280px;height:32px;border:1px solid var(--line);border-radius:16px;padding:0 4px 0 13px}
+  .search span{color:#B0B0A8;font-size:12px}
+  .search .go{margin-left:auto;width:26px;height:26px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px}
+
+  .rhead{margin:20px 40px 0;display:flex;align-items:baseline;justify-content:space-between}
+  .rhead .cnt{font-size:13px;color:var(--ink2)}
+  .rhead .cnt b{color:var(--ink);font-size:15px;font-weight:600}
+  .sorts{display:flex;gap:16px;font-size:12px;color:var(--ink3)}
+  .sorts .on{color:var(--primary);font-weight:600}
+
+  .grid{margin:14px 40px 0;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .item{background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .item .pic{height:156px;border:none;border-bottom:1px solid var(--line2);border-radius:0}
+  .item .bd{padding:12px 14px 14px}
+  .item .tt{font-size:13.5px;font-weight:600;line-height:1.45;margin-bottom:7px;height:39px;overflow:hidden}
+  .item .tags{display:flex;gap:5px;flex-wrap:wrap}
+  .item .foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:9px;border-top:1px dashed var(--line2)}
+  .item .q{font-size:12px;color:var(--primary-d);font-weight:600}
+  .item .q.low{color:var(--accent)}
+  .item .st{font-size:11px;color:var(--ink3)}
+  .item.sold .pic{opacity:.55}
+  .item.sold .tt{color:var(--ink2)}
+  .more{margin:26px 0 34px;display:flex;justify-content:center}
+  .more .btn{height:36px;padding:0 40px}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="doc-head">
+    <div class="meta">P02 / 用户端<br>路由 <b>/discover</b><br>F3 浏览与筛选 · P0</div>
+    <h1>发现</h1>
+    <div class="sub">运营位 + 四维筛选 + 物品卡片网格，是领取者进入系统的第一个页面</div>
+  </div>
+
+  <div class="frame">
+    <div class="frame-bar"><b>发现 · 默认态（未筛选）</b><span>1280 × 约 1080</span></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="brand">
+          <span class="logo">拾</span>
+          <span>拾光 · 校园旧物捐赠</span>
+        </div>
+        <nav class="nav">
+          <a class="on">发现</a>
+          <a>捐赠</a>
+          <a>我的记录</a>
+        </nav>
+        <div class="userbox">
+          <span class="avatar">李</span>
+          <span>李明 · 2022010101</span>
+        </div>
+      </div>
+
+      <div class="banner">
+        <div>
+          <h2>毕业季 · 让闲置继续发光<i class="mk">1</i></h2>
+          <p>本学期已流转 <b>214</b> 件物品，累计减少 <b>326 kg</b> 碳排放
+            <span class="cd">距离校还有 <b>12</b> 天</span>
+          </p>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>68</b><span>在架批次</span></div>
+          <div class="stat"><b>12</b><span>待审核</span></div>
+          <div class="stat"><b>2</b><span>爱心驿站</span></div>
+        </div>
+      </div>
+
+      <div class="filters">
+        <div class="frow">
+          <span class="k">品类</span>
+          <span class="chip on">全部</span>
+          <span class="chip">教材书籍</span>
+          <span class="chip">衣物鞋帽</span>
+          <span class="chip">生活用品</span>
+          <span class="chip">小家电与数码</span>
+          <span class="chip">文具杂物</span>
+          <span class="chip">体育器材</span>
+          <i class="mk">2</i>
+        </div>
+        <div class="frow">
+          <span class="k">驿站</span>
+          <span class="select" style="width:190px;height:30px"><span>全部驿站</span><span class="caret">▾</span></span>
+          <span class="k" style="width:auto;margin-left:14px">成色</span>
+          <span class="chip multi on">全新</span>
+          <span class="chip multi on">良好</span>
+          <span class="chip multi">可用</span>
+          <span class="tag grey" style="margin-left:2px">仅看有货 <span class="dot"></span></span>
+          <div class="search">
+            <span>搜索物品名称或描述</span>
+            <span class="go">→</span>
+          </div>
+          <i class="mk">3</i>
+        </div>
+      </div>
+
+      <div class="rhead">
+        <div class="cnt">共 <b>68</b> 件在架物品</div>
+        <div class="sorts">
+          <span class="on">最新入库</span>
+          <span>余量从多到少</span>
+          <span>减碳量</span>
+        </div>
+      </div>
+
+      <div class="grid">
+
+        <div class="item">
+          <div class="ph pic"><span>图片占位</span></div>
+          <div class="bd">
+            <div class="tt">高等数学 第七版（上下册）+ 习题册</div>
+            <div class="tags">
+              <span class="tag">教材书籍</span><span class="tag green">良好</span>
+            </div>
+            <div class="foot">
+              <span class="q">余 3 件<i class="mk">4</i></span>
+              <span class="st">一食堂西侧驿站</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="ph pic"><span>图片占位</span></div>
+          <div class="bd">
+            <div class="tt">羽绒服 男款 L 码 深蓝色</div>
+            <div class="tags">
+              <span class="tag">衣物鞋帽</span><span class="tag green">良好</span>
+            </div>
+            <div class="foot">
+              <span class="q low">余 1 件</span>
+              <span class="st">一食堂西侧驿站</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="ph pic"><span>图片占位</span></div>
+          <div class="bd">
+            <div class="tt">护眼台灯 三档调光 含灯泡</div>
+            <div class="tags">
+              <span class="tag">小家电与数码</span><span class="tag green">全新</span>
+            </div>
+            <div class="foot">
+              <span class="q">余 2 件</span>
+              <span class="st">三号宿舍楼下驿站</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="ph pic"><span>图片占位</span></div>
+          <div class="bd">
+            <div class="tt">床上四件套 1.2 米床 已清洗</div>
+            <div class="tags">
+              <span class="tag">生活用品</span><span class="tag green">良好</span>
+            </div>
+            <div class="foot">
+              <span class="q low">余 1 件</span>
+              <span class="st">三号宿舍楼下驿站</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="ph pic"><span>图片占位</span></div>
+          <div class="bd">
+            <div class="tt">斯伯丁篮球 七成新 已充气</div>
+            <div class="tags">
+              <span class="tag">体育器材</span><span class="tag green">可用</span>
+            </div>
+            <div class="foot">
+              <span class="q">余 2 件</span>
+              <span class="st">一食堂西侧驿站</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="ph pic"><span>图片占位</span></div>
+          <div class="bd">
+            <div class="tt">保温杯 500ml 全新未拆封</div>
+            <div class="tags">
+              <span class="tag">生活用品</span><span class="tag green">全新</span>
+            </div>
+            <div class="foot">
+              <span class="q">余 4 件</span>
+              <span class="st">三号宿舍楼下驿站</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="ph pic"><span>图片占位</span></div>
+          <div class="bd">
+            <div class="tt">考研英语真题 2015—2025 全册</div>
+            <div class="tags">
+              <span class="tag">教材书籍</span><span class="tag green">良好</span>
+            </div>
+            <div class="foot">
+              <span class="q">余 6 件</span>
+              <span class="st">一食堂西侧驿站</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="item sold">
+          <div class="ph pic"><span>图片占位</span></div>
+          <div class="bd">
+            <div class="tt">折叠收纳箱 60L 带盖</div>
+            <div class="tags">
+              <span class="tag">生活用品</span><span class="tag green">可用</span>
+            </div>
+            <div class="foot">
+              <span class="q" style="color:var(--ink3);font-weight:400">已约满<i class="mk">5</i></span>
+              <span class="st">三号宿舍楼下驿站</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="more">
+        <button class="btn btn-ghost">加载更多<i class="mk">6</i></button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="notes">
+    <h3>交互说明</h3>
+    <ol>
+      <li><b>运营位。</b>展示本季主题、累计流转数据与离校倒计时（倒计时取毕业典礼日期，可配置）。数据为实时聚合，不是写死的文案。右侧三个数字分别对应在架批次、待审核数、驿站数——管理员看到的是同一个组件，但数字权限不同。</li>
+      <li><b>品类筛选。</b>单选，点击即生效，切换时列表区立即进入<b>骨架屏</b>状态（不是空白闪烁）。筛选条件同步写入 URL 查询参数，因此「复制链接给同学」能还原同样的结果。</li>
+      <li><b>第二行筛选。</b>驿站为单选下拉；成色为<b>多选</b>胶囊，可同时选「全新 + 良好」；「仅看有货」默认开启，关掉后能看到已约满的物品。搜索框输入后按回车或点箭头触发，<b>不做输入即时搜索</b>（避免每敲一个字符发一次请求）。</li>
+      <li><b>余量与状态。</b>余量 = 总量 − 已预约 − 已领走（派生值，见架构文档 4.1）。余量 ≤1 时数字转为暖橙色，形成紧迫感提示。卡片整体可点击进入详情页。</li>
+      <li><b>已约满的卡片。</b>仍然展示但整体降饱和处理，余量位置显示「已约满」，点击进入详情后预约按钮为禁用态。保留展示是为了让领取者知道「这类物品曾经有」，便于下次蹲守。</li>
+      <li><b>加载更多。</b>每页 12 条，点击追加下一页而非跳页，保持浏览连续性。全部加载完后按钮变为「已经到底了」并禁用。分页兜底保留页码，供评审快速跳转验证数据。</li>
+    </ol>
+    <div class="tip">本页<b>不需要登录</b>即可浏览（对应需求 BR：未登录可看，预约需登录）。未登录点击预约时，跳转登录并在成功后回跳到当前物品详情页，这是降低领取者流失的关键一环。</div>
+  </div>
+
+  <div class="pager">
+    <a href="01-登录.html">← 01 登录</a>
+    <a href="03-物品详情与预约.html">03 物品详情与预约 →</a>
+  </div>
+
+</div>
+</body>
+</html>

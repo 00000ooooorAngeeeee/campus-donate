@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>04 捐赠登记 · 原型</title>
+<link rel="stylesheet" href="assets/proto.css">
+<style>
+  .wrap{display:flex;gap:24px;padding:24px 40px 36px;align-items:flex-start}
+  .formcol{flex:1;min-width:0}
+  .hintcol{width:340px;flex:none}
+
+  .fcard{background:#fff;border:1px solid var(--line);border-radius:8px;padding:24px 26px 22px}
+  .fcard h3{margin:0 0 4px;font-size:15px;font-weight:600}
+  .fcard .sub-t{margin:0 0 22px;font-size:12px;color:var(--ink3)}
+  .two{display:flex;gap:20px}
+  .two > .field{flex:1;min-width:0}
+
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;height:34px}
+  .seg span{padding:0 20px;display:flex;align-items:center;font-size:12.5px;color:var(--ink2);border-right:1px solid var(--line);background:#fff}
+  .seg span:last-child{border-right:none}
+  .seg span.on{background:var(--primary-s);color:var(--primary-d);font-weight:600}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chips .chip{height:30px;padding:0 14px;font-size:12.5px}
+
+  .stepper{display:inline-flex;align-items:center;height:34px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff}
+  .stepper .s{width:34px;height:100%;display:flex;align-items:center;justify-content:center;color:var(--ink2);font-size:14px;background:#FAFAF6}
+  .stepper .v{width:54px;text-align:center;font-size:13.5px;font-weight:600}
+
+  .ta-wrap{position:relative}
+  .ta-wrap .count{position:absolute;right:11px;bottom:8px;font-size:11px;color:var(--ink3);background:#fff;padding-left:6px}
+  .ta-wrap .textarea{height:96px}
+
+  .up{display:flex;gap:10px;flex-wrap:wrap}
+  .up .thumb{width:96px;height:96px;border-radius:6px;border:1px solid var(--line);position:relative;overflow:hidden}
+  .up .thumb .ph{width:100%;height:100%;border:none;border-radius:0}
+  .up .thumb .x{position:absolute;top:4px;right:4px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.45);
+    color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center}
+  .up .slot{width:96px;height:96px;border-radius:6px;border:1px dashed var(--line);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;color:var(--ink3);font-size:11px;background:#FAFAF6;gap:2px}
+  .up .slot b{font-size:17px;font-weight:400;line-height:1;color:#C0C0B8}
+
+  .acts{display:flex;gap:12px;justify-content:flex-end;margin-top:26px;padding-top:20px;border-top:1px solid var(--line2)}
+
+  .sidecard{background:#fff;border:1px solid var(--line);border-radius:8px;padding:16px 18px;margin-bottom:16px}
+  .sidecard h4{margin:0 0 10px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:6px}
+  .sidecard ol,.sidecard ul{margin:0;padding-left:18px;font-size:12px;color:var(--ink2);line-height:1.95}
+  .sidecard li{margin-bottom:2px}
+  .sidecard li b{color:var(--ink)}
+  .steps3{display:flex;flex-direction:column;gap:9px;font-size:12px;color:var(--ink2)}
+  .steps3 .st{display:flex;gap:9px;align-items:flex-start}
+  .steps3 .n{width:18px;height:18px;border-radius:50%;background:var(--primary-s);color:var(--primary-d);font-size:10px;
+    display:flex;align-items:center;justify-content:center;flex:none;font-weight:600;margin-top:1px}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="doc-head">
+    <div class="meta">P04 / 用户端<br>路由 <b>/donate</b><br>F1 捐赠登记 · P0</div>
+    <h1>捐赠登记</h1>
+    <div class="sub">把必填项压到 6 个，让毕业生在搬行李的间隙也能两分钟提交一条</div>
+  </div>
+
+  <div class="frame">
+    <div class="frame-bar"><b>捐赠登记 · 默认态</b><span>1280 × 约 1000</span></div>
+    <div class="screen">
+
+      <div class="topbar">
+        <div class="brand"><span class="logo">拾</span><span>拾光 · 校园旧物捐赠</span></div>
+        <nav class="nav"><a>发现</a><a class="on">捐赠</a><a>我的记录</a></nav>
+        <div class="userbox"><span class="avatar">李</span><span>李明 · 2022010101</span></div>
+      </div>
+
+      <div class="wrap">
+
+        <div class="formcol">
+          <div class="fcard">
+            <h3>登记一件闲置</h3>
+            <p class="sub-t">带 <span style="color:var(--danger)">*</span> 为必填，其余可留空。提交后管理员会在 1 个工作日内审核。</p>
+
+            <div class="field">
+              <label class="label">物品标题<span class="req">*</span></label>
+              <div class="input placeholder">例如：高等数学 第七版（上下册）+ 习题册</div>
+              <div class="hint">写清「是什么 + 规格 + 数量」，领取者才容易搜到</div>
+            </div>
+
+            <div class="field">
+              <label class="label">品类<span class="req">*</span><i class="mk">1</i></label>
+              <div class="chips">
+                <span class="chip on">教材书籍</span>
+                <span class="chip">衣物鞋帽</span>
+                <span class="chip">生活用品</span>
+                <span class="chip">小家电与数码</span>
+                <span class="chip">文具杂物</span>
+                <span class="chip">体育器材</span>
+              </div>
+            </div>
+
+            <div class="two">
+              <div class="field">
+                <label class="label">成色<span class="req">*</span><i class="mk">2</i></label>
+                <div class="seg">
+                  <span>全新</span>
+                  <span class="on">良好</span>
+                  <span>可用</span>
+                </div>
+                <div class="hint">良好 = 有使用痕迹但功能完好</div>
+              </div>
+              <div class="field">
+                <label class="label">数量<span class="req">*</span><i class="mk">3</i></label>
+                <div class="stepper">
+                  <div class="s">−</div>
+                  <div class="v">5</div>
+                  <div class="s">＋</div>
+                </div>
+                <div class="hint">同款多件填总数，超过 20 件建议分批</div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">送达驿站<span class="req">*</span><i class="mk">4</i></label>
+              <div class="select"><span>一食堂西侧 · 爱心驿站</span><span class="caret">▾</span></div>
+              <div class="hint">请把实物送到该驿站，管理员核对后才会出现在「发现」页</div>
+            </div>
+
+            <div class="field">
+              <label class="label">物品描述<span class="req">*</span><i class="mk">5</i></label>
+              <div class="ta-wrap">
+                <div class="textarea">上下册齐全，习题册也在。页内无笔记，只有少量铅笔划线。书脊完好，无缺页。<br>适合大一新生使用。</div>
+                <span class="count">58 / 200</span>
+              </div>
+              <div class="hint">至少 10 字。写清使用痕迹、缺失配件、是否可议，能减少一半的追问</div>
+            </div>
+
+            <div class="field" style="margin-bottom:6px">
+              <label class="label">物品照片<i class="mk">6</i><span class="dim" style="font-weight:400">（建议上传，非必填）</span></label>
+              <div class="up">
+                <div class="thumb"><div class="ph"><span>图 1</span></div><span class="x">×</span></div>
+                <div class="thumb"><div class="ph"><span>图 2</span></div><span class="x">×</span></div>
+                <div class="thumb"><div class="ph"><span>图 3</span></div><span class="x">×</span></div>
+                <div class="slot"><b>＋</b>添加照片</div>
+              </div>
+              <div class="hint">最多 6 张。图片会自动压缩到长边 1280 再上传，你不必手动处理</div>
+            </div>
+
+            <div class="acts">
+              <button class="btn btn-ghost">存为草稿</button>
+              <button class="btn btn-primary lg" style="min-width:150px">提交审核<i class="mk">7</i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="hintcol">
+
+          <div class="sidecard">
+            <h4>提交后会发生什么</h4>
+            <div class="steps3">
+              <div class="st"><span class="n">1</span><div><b>等待审核</b><br>管理员在 1 个工作日内处理</div></div>
+              <div class="st"><span class="n">2</span><div><b>送到驿站</b><br>审核通过后请把实物送达所选驿站</div></div>
+              <div class="st"><span class="n">3</span><div><b>收货上架</b><br>管理员核对数量后，物品出现在发现页</div></div>
+            </div>
+          </div>
+
+          <div class="sidecard">
+            <h4>常见的驳回原因</h4>
+            <ul>
+              <li>照片模糊、看不清物品本体</li>
+              <li>描述少于 10 字，无法判断状况</li>
+              <li>成色标注与实际不符（如标「全新」但有明显使用痕迹）</li>
+              <li>属于不接收品类（食品、药品、贴身衣物）</li>
+            </ul>
+          </div>
+
+          <div class="sidecard" style="background:#FAFAF6">
+            <h4>不需要的东西也别扔</h4>
+            <div style="font-size:12px;color:var(--ink2);line-height:1.9">
+              本学期已流转 <b style="color:var(--ink)">214</b> 件物品，累计减碳 <b style="color:var(--ink)">326 kg</b>。
+              你的一条登记，平均能让 <b style="color:var(--ink)">83%</b> 的物品在两周内被领走。
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="notes">
+    <h3>交互说明</h3>
+    <ol>
+      <li><b>品类。</b>六选一的胶囊组，不用下拉框——下拉要点两次才看到选项，胶囊一次可见全部，选错的概率也更低。选择后自动带出该品类的默认单件估重，用于后面计算减碳量。</li>
+      <li><b>成色。</b>三段式单选，每段配一句解释（在 hint 里）。成色直接影响领取意愿，也可能成为驳回原因，所以必须给出判定标准，不能让用户凭感觉选。</li>
+      <li><b>数量。</b>步进器，默认 1。上限 20，超过时提示「超过 20 件建议拆成多个批次」，但不强制拦截——真实场景中存在整箱捐赠。</li>
+      <li><b>驿站。</b>单选下拉。选定后，下方 hint 会替换为该驿站的<b>地址与营业时间</b>，让捐赠者在提交时就知道要送到哪、什么时候能送。</li>
+      <li><b>描述。</b>实时字数统计（右下角），少于 10 字时提交按钮禁用。超过 200 字截断并提示。这段文字会参与搜索，所以要引导用户写关键词而非抒情。</li>
+      <li><b>图片上传。</b>选择后<b>立即在前端压缩</b>（canvas，长边 1280、质量 0.82、输出 WebP），压缩完成后才显示缩略图。支持点击缩略图换图、点 × 删除。非必填是刻意的——要求必须拍照会显著降低提交率，管理员可以在审核环节要求补图。</li>
+      <li><b>提交。</b>点击后按钮 loading 并禁用，防止重复提交。成功时跳转「我的记录」并高亮该条，同时展示「请将实物送至 X 驿站」的提示条。</li>
+    </ol>
+    <div class="tip">「存为草稿」是 P1 功能：草稿只存本地（localStorage），不上传服务端，避免产生半成品数据污染审核队列。</div>
+    <div class="tip red">被驳回后进入本页时，表单会带上原内容与驳回原因横幅（红色），标题区显示「修改后重新提交」。提交后回到「待审核」，原驳回原因保留在流转履历中，不会被覆盖。</div>
+  </div>
+
+  <div class="pager">
+    <a href="03-物品详情与预约.html">← 03 物品详情与预约</a>
+    <a href="05-我的记录.html">05 我的记录 →</a>
+  </div>
+
+</div>
+</body>
+</html>

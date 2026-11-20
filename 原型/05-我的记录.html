@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>05 我的记录 · 原型</title>
+<link rel="stylesheet" href="assets/proto.css">
+<style>
+  .tabs{display:flex;gap:32px;padding:0 40px;border-bottom:1px solid var(--line2);height:52px;align-items:center}
+  .tabs a{font-size:14px;color:var(--ink2);position:relative;padding:16px 0}
+  .tabs a.on{color:var(--ink);font-weight:600}
+  .tabs a.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--primary)}
+  .tabs .cnt{font-size:11.5px;color:var(--ink3);margin-left:4px}
+
+  .list{padding:8px 40px 30px}
+  .rec{display:flex;gap:16px;padding:18px 4px;border-bottom:1px solid var(--line2)}
+  .rec .pic{width:86px;height:86px;flex:none}
+  .rec .info{flex:1;min-width:0}
+  .rec .tt{font-size:14px;font-weight:600;margin-bottom:7px;display:flex;align-items:center;gap:8px}
+  .rec .meta{font-size:12px;color:var(--ink3);display:flex;gap:20px;flex-wrap:wrap}
+  .rec .meta b{color:var(--ink2);font-weight:500}
+  .rec .right{width:180px;flex:none;text-align:right;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between}
+  .rec .reject{margin-top:9px;background:var(--danger-s);border:1px solid #F0CDC8;border-radius:6px;padding:8px 12px;font-size:12px;color:#8B2E22}
+  .rec .reject b{font-weight:600}
+
+  .expand{background:#FAFAF6;border:1px solid var(--line2);border-radius:8px;margin:12px 0 4px;padding:16px 20px}
+
+  .resgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:22px 40px 34px}
+  .rescard{background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .rescard .hd{padding:14px 18px;border-bottom:1px solid var(--line2);display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .rescard .hd .t{font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .rescard .bd{padding:16px 18px 18px}
+  .codebox{background:#FBEEE4;border:1px dashed #E9C4A4;border-radius:8px;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .codebox .lb{font-size:11px;color:#A9612C;letter-spacing:.5px;margin-bottom:2px}
+  .codebox .cd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:23px;font-weight:600;letter-spacing:3px;color:#8E4E1E;line-height:1.2}
+  .codebox .cp{font-size:11.5px;color:#A9612C}
+  .kv{font-size:12px;color:var(--ink3);line-height:2.1;display:flex;justify-content:space-between}
+  .kv b{color:var(--ink);font-weight:500}
+  .cdown{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line2);display:flex;align-items:center;justify-content:space-between}
+  .cdown .tm{font-size:12px;color:var(--warn)}
+  .cdown .tm b{font-weight:600;font-variant-numeric:tabular-nums}
+  .acts{display:flex;gap:10px;margin-top:12px}
+  .acts .btn{flex:1;height:30px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="doc-head">
+    <div class="meta">P05 / 用户端<br>路由 <b>/my/records</b><br>F6 记录与履历 · P0</div>
+    <h1>我的记录</h1>
+    <div class="sub">「我捐的」看物品去向，「我领的」看领取码与倒计时，两侧共享同一套履历数据</div>
+  </div>
+
+  <div class="frame">
+    <div class="frame-bar"><b>我的记录 · 我捐的（含一条已展开履历）</b><span>1280 × 约 860</span></div>
+    <div class="screen">
+      <div class="topbar">
+        <div class="brand"><span class="logo">拾</span><span>拾光 · 校园旧物捐赠</span></div>
+        <nav class="nav"><a>发现</a><a>捐赠</a><a class="on">我的记录</a></nav>
+        <div class="userbox"><span class="avatar">李</span><span>李明 · 2022010101</span></div>
+      </div>
+
+      <div class="tabs">
+        <a class="on">我捐的<span class="cnt">4</span><i class="mk">1</i></a>
+        <a>我领的<span class="cnt">2</span></a>
+      </div>
+
+      <div class="list">
+
+        <div class="rec">
+          <div class="ph pic"><span>图片</span></div>
+          <div class="info">
+            <div class="tt">
+              高等数学 第七版（上下册）+ 习题册
+              <span class="tag blue"><span class="dot"></span>在架</span>
+            </div>
+            <div class="meta">
+              <span>提交 <b>11-18 14:20</b></span>
+              <span>共 <b>5</b> 件 · 已被领走 <b>1</b> 件 · 剩余 <b>3</b> 件</span>
+              <span>一食堂西侧驿站</span>
+            </div>
+            <div class="expand">
+              <div class="between" style="margin-bottom:12px">
+                <span style="font-size:12.5px;font-weight:600">流转履历<i class="mk">4</i></span>
+                <span class="f11 dim">他人信息已脱敏</span>
+              </div>
+              <ul class="tl" style="margin:0">
+                <li class="done"><div class="tx"><b>提交捐赠</b>　我<span class="tm">11-18 14:20</span></div></li>
+                <li class="done"><div class="tx"><b>审核通过</b>　驿站管理员<span class="tm">11-18 16:02</span></div></li>
+                <li class="done"><div class="tx"><b>收货入库</b>　驿站管理员　共 5 件<span class="tm">11-19 09:30</span></div></li>
+                <li class="done"><div class="tx"><b>被预约 1 件</b>　某同学<span class="tm">11-19 10:15</span></div></li>
+                <li class="done"><div class="tx"><b>核销出库 1 件</b>　驿站管理员<span class="tm">11-20 11:40</span></div></li>
+                <li class="grey"><div class="tx dim">当前在架 · 剩余 3 件</div></li>
+              </ul>
+            </div>
+          </div>
+          <div class="right">
+            <span class="dim f11">更新于 11-20 11:40</span>
+            <div class="row gap8">
+              <button class="btn sm">查看详情</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="rec">
+          <div class="ph pic"><span>图片</span></div>
+          <div class="info">
+            <div class="tt">
+              护眼台灯 三档调光 含灯泡
+              <span class="tag red"><span class="dot"></span>已驳回</span>
+            </div>
+            <div class="meta">
+              <span>提交 <b>11-19 20:11</b></span>
+              <span>共 <b>1</b> 件</span>
+              <span>三号宿舍楼下驿站</span>
+            </div>
+            <div class="reject">
+              <b>驳回原因：</b>照片模糊，看不清灯罩是否有破损，请补充一张开灯状态的照片。<i class="mk">3</i>
+            </div>
+          </div>
+          <div class="right">
+            <span class="dim f11">驳回于 11-20 09:05</span>
+            <div class="row gap8">
+              <button class="btn sm btn-ghost">放弃</button>
+              <button class="btn sm btn-primary">修改重提</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="rec">
+          <div class="ph pic"><span>图片</span></div>
+          <div class="info">
+            <div class="tt">
+              考研英语真题 2015—2025 全册
+              <span class="tag grey"><span class="dot"></span>待审核</span>
+            </div>
+            <div class="meta">
+              <span>提交 <b>11-20 10:32</b></span>
+              <span>共 <b>6</b> 件</span>
+              <span>一食堂西侧驿站</span>
+            </div>
+          </div>
+          <div class="right">
+            <span class="dim f11">预计 1 个工作日内处理</span>
+            <div class="row gap8"><button class="btn sm">撤回</button></div>
+          </div>
+        </div>
+
+        <div class="rec">
+          <div class="ph pic"><span>图片</span></div>
+          <div class="info">
+            <div class="tt">
+              折叠收纳箱 60L 带盖
+              <span class="tag green"><span class="dot"></span>已完结</span>
+            </div>
+            <div class="meta">
+              <span>提交 <b>10-02 09:15</b></span>
+              <span>共 <b>2</b> 件 · 全部被领走</span>
+              <span>完结于 <b>10-09 15:20</b></span>
+            </div>
+          </div>
+          <div class="right">
+            <span class="dim f11">减碳 ≈ 4.8 kg</span>
+            <div class="row gap8"><button class="btn sm">查看详情</button></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="frame-bar"><b>我的记录 · 我领的</b><span>1280 × 约 540</span></div>
+    <div class="screen">
+      <div class="topbar">
+        <div class="brand"><span class="logo">拾</span><span>拾光 · 校园旧物捐赠</span></div>
+        <nav class="nav"><a>发现</a><a>捐赠</a><a class="on">我的记录</a></nav>
+        <div class="userbox"><span class="avatar">李</span><span>李明 · 2022010101</span></div>
+      </div>
+
+      <div class="tabs">
+        <a>我捐的<span class="cnt">4</span></a>
+        <a class="on">我领的<span class="cnt">2</span></a>
+      </div>
+
+      <div class="resgrid">
+
+        <div class="rescard">
+          <div class="hd">
+            <span class="t">高等数学 第七版（上下册）</span>
+            <span class="tag orange"><span class="dot"></span>待领取</span>
+          </div>
+          <div class="bd">
+            <div class="codebox">
+              <div>
+                <div class="lb">领取码<i class="mk">5</i></div>
+                <div class="cd">A3K9P2QX</div>
+              </div>
+              <span class="cp">复制</span>
+            </div>
+            <div class="kv"><span>驿站</span><b>一食堂西侧 · 爱心驿站</b></div>
+            <div class="kv"><span>数量</span><b>2 件</b></div>
+            <div class="kv"><span>到期时间</span><b>2026-11-23 15:20</b></div>
+            <div class="cdown">
+              <span class="tm">剩余 <b>2 天 23 小时</b>，逾期将自动释放<i class="mk">6</i></span>
+            </div>
+            <div class="acts">
+              <button class="btn">查看物品</button>
+              <button class="btn btn-ghost">取消预约<i class="mk">7</i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="rescard">
+          <div class="hd">
+            <span class="t">羽绒服 男款 L 码 深蓝色</span>
+            <span class="tag red"><span class="dot"></span>剩余不足 1 天</span>
+          </div>
+          <div class="bd">
+            <div class="codebox" style="background:#FBEDEB;border-color:#EDC9C3">
+              <div>
+                <div class="lb" style="color:#9A3F32">领取码</div>
+                <div class="cd" style="color:#7F3327">B7M2N4RT</div>
+              </div>
+              <span class="cp" style="color:#9A3F32">复制</span>
+            </div>
+            <div class="kv"><span>驿站</span><b>一食堂西侧 · 爱心驿站</b></div>
+            <div class="kv"><span>数量</span><b>1 件</b></div>
+            <div class="kv"><span>到期时间</span><b>2026-11-21 09:10</b></div>
+            <div class="cdown">
+              <span class="tm" style="color:var(--danger)">剩余 <b>17 小时 42 分</b>，请尽快到店领取</span>
+            </div>
+            <div class="acts">
+              <button class="btn btn-accent">查看物品</button>
+              <button class="btn btn-ghost">取消预约</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <h3>交互说明</h3>
+    <ol>
+      <li><b>双 Tab 结构。</b>「我捐的」与「我领的」共用同一个页面而非两个路由，切换不刷新，Tab 上带数量角标。默认落在「我领的」——因为领取是有时效的，更需要被提醒；无领取记录时回退到「我捐的」。</li>
+      <li><b>四类状态。</b>待审核（灰）→ 在架（蓝）→ 已完结（绿），异常分支为已驳回（红）。状态徽标颜色与文字<b>同时变化</b>，不只靠颜色区分，满足无障碍要求（对比度与色觉障碍）。</li>
+      <li><b>驳回与重提。</b>驳回原因直接展示在列表里，不用点进详情才知道为什么被打回——这是降低放弃率的关键。点「修改重提」进入捐赠表单，字段预填，提交后回到待审核，<b>原驳回原因保留在履历中</b>不被覆盖。点「放弃」则批次转为永久作废。</li>
+      <li><b>行内展开履历。</b>点击整行展开/收起时间轴，不用跳转页面。时间轴与详情页的是<b>同一个组件</b>，仅数据源不同。展开状态存入 URL，刷新后仍保持。</li>
+      <li><b>领取码。</b>8 位大写字母 + 数字，已剔除 O/0/I/1 等易混字符，避免口头报码时出错。码用等宽字体、加宽字距，方便隔屏读给工作人员。点击「复制」写到剪贴板并 toast 提示。</li>
+      <li><b>倒计时。</b>前端每秒刷新一次剩余时间，剩余不足 1 天时文案与颜色升级为红色警示。倒计时归零时<b>不依赖刷新</b>：一次轮询或用户下次操作时，服务端惰性判定将其置为已超时，卡片变为灰色并显示「已超时，数量已释放」。</li>
+      <li><b>取消预约。</b>二次确认弹窗说明后果（数量将归还、需重新预约），确认后调用取消接口，该卡片保留在列表但转为已取消状态，不直接消失——避免用户误以为操作失败。</li>
+    </ol>
+    <div class="tip">「我捐的」列表刻意展示「已被领走 N 件」而不是只写状态。这是捐赠者最想知道的信息，也是这个平台区别于「群里喊一声」的核心价值。</div>
+  </div>
+
+  <div class="pager">
+    <a href="04-捐赠登记.html">← 04 捐赠登记</a>
+    <a href="06-物品管理.html">06 物品管理（后台）→</a>
+  </div>
+
+</div>
+</body>
+</html>

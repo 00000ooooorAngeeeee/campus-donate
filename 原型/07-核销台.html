@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>07 核销台（后台）· 原型</title>
+<link rel="stylesheet" href="assets/proto.css">
+<style>
+  .cols2{display:flex;gap:20px;align-items:flex-start}
+  .c-left{width:520px;flex:none}
+  .c-right{flex:1;min-width:0}
+
+  .codeinput{margin-top:6px;height:58px;border:2px solid var(--line);border-radius:8px;display:flex;align-items:center;
+    padding:0 18px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:25px;letter-spacing:6px;color:var(--ink3);background:#fff}
+  .codeinput.on{border-color:var(--primary);color:var(--ink)}
+  .keypad{display:flex;gap:8px;margin-top:10px}
+  .keypad .k{width:38px;height:26px;border:1px solid var(--line);border-radius:4px;display:flex;align-items:center;
+    justify-content:center;font-size:11.5px;color:var(--ink2);background:#fff}
+
+  .ok{background:var(--primary-s);border:1px solid #CFE4D6;border-radius:8px;padding:13px 16px;margin-top:16px}
+  .ok .h{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--primary-d);margin-bottom:8px}
+  .ok .h .i{width:16px;height:16px;border-radius:50%;background:var(--primary);color:#fff;font-size:10px;
+    display:flex;align-items:center;justify-content:center}
+  .ok .kv{color:var(--primary-d);opacity:.85}
+  .ok .kv b{color:var(--primary-d);opacity:1}
+
+  .fails{margin-top:16px;border-top:1px dashed var(--line2);padding-top:14px}
+  .fails .t{font-size:11.5px;color:var(--ink3);margin-bottom:9px}
+  .failrow{display:flex;gap:9px;align-items:flex-start;font-size:11.5px;color:var(--ink2);margin-bottom:7px;line-height:1.6}
+  .failrow .d{width:5px;height:5px;border-radius:50%;background:var(--danger);margin-top:6px;flex:none}
+  .failrow b{color:var(--ink);font-weight:500}
+
+  .wait{max-height:none}
+  .wrow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line2)}
+  .wrow:last-child{border-bottom:none;padding-bottom:0}
+  .wrow .cd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;font-weight:600;letter-spacing:1.5px;width:98px;flex:none}
+  .wrow .nm{flex:1;min-width:0;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .wrow .nm span{display:block;font-size:11px;color:var(--ink3);margin-top:1px}
+  .wrow .lt{width:106px;text-align:right;font-size:11.5px;flex:none}
+  .wrow.urgent .lt{color:var(--danger);font-weight:600}
+  .wrow .go{width:56px;flex:none;text-align:right}
+
+  .rec-tb{table-layout:fixed}
+  .rec-tb th:nth-child(1){width:88px}
+  .rec-tb th:nth-child(3){width:100px}
+  .rec-tb th:nth-child(4){width:68px}
+  .rec-tb td:nth-child(2){white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rec-tb td:nth-child(2) em{font-style:normal;color:var(--ink3);margin-left:4px}
+  .rec-tb td:first-child{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;letter-spacing:1px;color:var(--ink2)}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="doc-head">
+    <div class="meta">P07 / 管理后台<br>路由 <b>/admin/redeem</b><br>F5 核销出库 · P0</div>
+    <h1>核销台</h1>
+    <div class="sub">工作人员在驿站前台用这一个页面完成核销，所以只保留「输入码 → 确认」两步</div>
+  </div>
+
+  <div class="frame">
+    <div class="frame-bar"><b>核销台 · 默认态（含一次成功核销结果）</b><span>1280 × 约 940</span></div>
+    <div class="screen">
+      <div class="admin">
+
+        <aside class="side">
+          <div class="side-brand"><span>拾</span>拾光 管理后台</div>
+          <nav>
+            <a>物品管理</a>
+            <a class="on">核销台</a>
+            <a>统计看板</a>
+          </nav>
+          <div class="side-foot">管理员 admin01<br>学生资助中心</div>
+        </aside>
+
+        <div class="main">
+          <div class="admin-top">
+            <h2>核销台</h2>
+            <div class="right">
+              <span>一食堂西侧驿站 · 营业中</span>
+              <a>退出登录</a>
+            </div>
+          </div>
+
+          <div class="body">
+
+            <div class="cols2">
+
+              <div class="c-left">
+                <div class="card">
+                  <div class="card-hd"><h3>领取码核销</h3><span class="f11 dim">8 位字母 + 数字</span></div>
+                  <div class="card-bd" style="padding:18px 20px 20px">
+                    <label class="label">输入领取码<i class="mk">1</i></label>
+                    <div class="codeinput on">A3K9P2QX</div>
+                    <div class="keypad">
+                      <span class="k">⌫</span>
+                      <span class="k">清空</span>
+                      <span class="f11 dim" style="margin-left:auto;align-self:center">扫码枪可直接输入，回车即核销</span>
+                    </div>
+
+                    <button class="btn btn-primary lg block mt16">核 销<i class="mk">2</i></button>
+
+                    <div class="ok">
+                      <div class="h"><span class="i">✓</span>核销成功<i class="mk">3</i></div>
+                      <div class="kv"><span>物品</span>　<b>高等数学 第七版（上下册）</b></div>
+                      <div class="kv"><span>数量</span>　<b>2 件</b>　｜　领取人　<b>李明 · 2022010101</b></div>
+                      <div class="kv"><span>批次状态</span>　<b>剩余 3 件，继续在架</b></div>
+                    </div>
+
+                    <div class="fails">
+                      <div class="t">其余四种结果与对应文案<i class="mk">4</i></div>
+                      <div class="failrow"><span class="d"></span><div><b>重复核销</b>　该单已于 11-20 11:40 由 admin01 核销，请勿重复操作</div></div>
+                      <div class="failrow"><span class="d"></span><div><b>已超时</b>　该预约已超过 3 天有效期，2 件数量已自动释放</div></div>
+                      <div class="failrow"><span class="d"></span><div><b>已取消</b>　该预约由领取人于 11-19 15:02 主动取消</div></div>
+                      <div class="failrow"><span class="d"></span><div><b>码无效</b>　领取码不存在，请核对后重试（不清空已输入内容）</div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="c-right">
+                <div class="card">
+                  <div class="card-hd">
+                    <h3>今日待领取<i class="mk">5</i></h3>
+                    <span class="f11 dim">按到期时间升序，快过期的排前面</span>
+                  </div>
+                  <div class="card-bd" style="padding:12px 20px 16px">
+
+                    <div class="wrow urgent">
+                      <span class="cd">B7M2N4RT</span>
+                      <span class="nm">羽绒服 男款 L 码 深蓝色<span>王小雨 · 2022010233 · 1 件</span></span>
+                      <span class="lt">剩 17 小时</span>
+                      <span class="go"><a>核销</a></span>
+                    </div>
+
+                    <div class="wrow">
+                      <span class="cd">C4N8Q6WZ</span>
+                      <span class="nm">保温杯 500ml 全新未拆封<span>陈思远 · 2022010455 · 1 件</span></span>
+                      <span class="lt">剩 1 天 4 小时</span>
+                      <span class="go"><a>核销</a></span>
+                    </div>
+
+                    <div class="wrow">
+                      <span class="cd">A3K9P2QX</span>
+                      <span class="nm">高等数学 第七版（上下册）<span>李明 · 2022010101 · 2 件</span></span>
+                      <span class="lt">剩 2 天 23 小时</span>
+                      <span class="go"><a>核销</a></span>
+                    </div>
+
+                    <div class="wrow">
+                      <span class="cd">D2P5R8TY</span>
+                      <span class="nm">斯伯丁篮球 七成新 已充气<span>孙浩 · 2022010511 · 1 件</span></span>
+                      <span class="lt">剩 2 天 11 小时</span>
+                      <span class="go"><a>核销</a></span>
+                    </div>
+
+                    <div class="wrow">
+                      <span class="cd">E9T3U7IM</span>
+                      <span class="nm">护眼台灯 三档调光 含灯泡<span>赵一鸣 · 2022010377 · 1 件</span></span>
+                      <span class="lt">剩 2 天 20 小时</span>
+                      <span class="go"><a>核销</a></span>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="card mt20">
+                  <div class="card-hd">
+                    <h3>最近核销记录<i class="mk">6</i></h3>
+                    <span class="f11 dim">今日已核销 14 单 / 27 件</span>
+                  </div>
+                  <table class="tb rec-tb">
+                    <thead>
+                      <tr><th>领取码</th><th>物品 / 数量</th><th>核销时间</th><th>操作人</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>A3K9P2QX</td><td>高等数学 第七版（上下册）<em>×2</em></td><td>11-20 11:40</td><td>admin01</td></tr>
+                      <tr><td>F1V6X2KQ</td><td>考研英语真题 全册<em>×3</em></td><td>11-20 11:12</td><td>admin01</td></tr>
+                      <tr><td>G8Y4Z9LM</td><td>折叠收纳箱 60L 带盖<em>×1</em></td><td>11-20 10:48</td><td>admin02</td></tr>
+                      <tr><td>H5B2C7ND</td><td>床上四件套 1.2 米床<em>×1</em></td><td>11-20 10:20</td><td>admin01</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <h3>交互说明</h3>
+    <ol>
+      <li><b>领取码输入。</b>固定 8 位，输入后自动转大写并过滤掉空格与连字符（防止从聊天记录里复制带格式）。支持扫码枪直接输入——扫码枪本质是键盘，扫完会自动回车，因此<b>回车即触发核销</b>，不用鼠标点按钮。</li>
+      <li><b>核销按钮。</b>输入不足 8 位时禁用。执行时按钮 loading 并锁定，防止工作人员连点造成重复请求。核销是整个系统里唯一「一个人对着实物做判断」的操作，所以交互上要尽量减少误触可能。</li>
+      <li><b>成功结果。</b>必须显示四件事：物品名、<b>数量</b>、领取人、批次剩余。工作人员要拿这份信息和手里的实物核对——数量尤其关键，一单 2 件只给 1 件是最常见的现场纠纷。</li>
+      <li><b>四类失败原因。</b>必须区分，不能统一报「核销失败」。四类各自的处理方式完全不同：重复核销要说明谁在何时核销的（防止两人抢同一单）；已超时说明数量已释放（让工作人员知道东西回到架上了）；已取消说明是谁取消的；码无效则<b>不清空输入</b>，方便逐位核对。</li>
+      <li><b>今日待领取。</b>按<b>到期时间升序</b>，快过期的排最前，剩不足 1 天的整行转红。这一列不是「今天预约的」，而是「今天及之前所有未领取的」，所以一个 3 天前预约的单也会在这里——它此刻最需要被处理。</li>
+      <li><b>最近核销记录。</b>保留当日记录并显示操作人，用于交班与事后核对。数据只读，不提供撤销——核销一旦完成就代表实物已交接，撤销需要走管理流程而不是界面上点一下。</li>
+    </ol>
+    <div class="tip">成功结果在 3 秒后自动清空，输入框获得焦点，等待下一单。这个细节看着小，但驿站高峰期一分钟要处理两三单，少一次点击就是少一次排队。</div>
+    <div class="tip red"><b>超时的判定位置：</b>核销前系统会先做一次惰性超时扫描（对应架构文档 4.3），所以输入一个已过期 4 小时的码，不会出现「先核销成功、事后才发现过期」的错乱。</div>
+  </div>
+
+  <div class="pager">
+    <a href="06-物品管理.html">← 06 物品管理</a>
+    <a href="08-统计看板.html">08 统计看板 →</a>
+  </div>
+
+</div>
+</body>
+</html>

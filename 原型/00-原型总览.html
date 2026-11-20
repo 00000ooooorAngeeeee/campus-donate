@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>00 原型总览 · 校园旧物捐赠平台</title>
+<link rel="stylesheet" href="assets/proto.css">
+<style>
+  .lead{background:#fff;border:1px solid var(--line);border-radius:8px;padding:20px 24px;margin-bottom:26px;display:grid;grid-template-columns:1.6fr 1fr;gap:32px}
+  .lead p{margin:0 0 10px;color:#3C3C38}
+  .lead p:last-child{margin-bottom:0}
+  .legend{font-size:12px;color:var(--ink2);line-height:2.1;border-left:1px solid var(--line2);padding-left:24px}
+  .flow{display:flex;align-items:stretch;gap:0;margin:0}
+  .flow .st{flex:1;background:#fff;border:1px solid var(--line);border-radius:6px;padding:11px 12px;position:relative}
+  .flow .ar{width:24px;display:flex;align-items:center;justify-content:center;color:#8B8B83;font-size:16px;flex:none}
+  .flow .st b{display:block;font-size:12.5px;font-weight:600;margin-bottom:3px}
+  .flow .st span{font-size:11px;color:var(--ink3);display:block}
+  .flow .st .tag{margin-top:7px}
+  .pg-list td:first-child{font-variant-numeric:tabular-nums;color:var(--ink3);width:52px}
+  .pg-list td:nth-child(2){font-weight:500}
+  .pg-list th:nth-child(1){width:56px}
+  .pg-list th:nth-child(2){width:186px}
+  .pg-list th:nth-child(3){width:66px}
+  .pg-list th:nth-child(4){width:180px}
+  .pg-list th:nth-child(6){width:86px}
+  .sec-title{font-size:14px;font-weight:600;margin:30px 0 12px;padding-left:10px;border-left:3px solid var(--primary)}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="doc-head">
+    <div class="meta"><b>产品原型 v1.0</b><br>1280 桌面端 · 10 个页面<br>2026-11-20</div>
+    <h1>校园旧物捐赠平台 · 原型总览</h1>
+    <div class="sub">拾光 —— 面向本校毕业季的闲置物品捐赠与领取平台，让每一件物品的流转都有据可查</div>
+  </div>
+
+  <div class="lead">
+    <div>
+      <p><b>这套原型做什么用。</b>它是《项目需求说明书》的可视化落地：把 7 项核心功能、2 类角色、1 条完整业务闭环，画成可以逐页翻看的界面草案。开发阶段以此为基准，避免三人对同一个页面的理解不一致。</p>
+      <p><b>为什么是中保真。</b>原型要解决的问题是"信息怎么摆、流程怎么走"，不是"像素长什么样"。因此图片、图表、头像一律用占位块表示，配色只保留两个有语义的强调色，让评审注意力集中在结构与流程上。视觉细节在开发阶段依据设计 token 细化。</p>
+      <p><b>怎么使用。</b>从下表任选一页进入，每页底部都有「交互说明」，用编号对应界面上的橙色标注点。<span class="dim">（标注点编号与说明列表一一对应）</span></p>
+    </div>
+    <div class="legend">
+      <div><i class="mk">1</i> 橙色标注点 → 对应「交互说明」编号</div>
+      <div><span class="tag green">公益绿</span> 主操作：提交、登录、核销</div>
+      <div><span class="tag orange">暖橙</span> 次操作：预约、领取相关</div>
+      <div><span class="tag grey">灰阶</span> 占位、禁用、次要信息</div>
+      <div><span class="tag red">红</span> 错误、驳回、超时</div>
+    </div>
+  </div>
+
+  <div class="sec-title">业务闭环（七步）</div>
+  <div class="flow">
+    <div class="st"><b>① 提交登记</b><span>填写 6 个必填项</span><span class="tag grey">学生</span></div>
+    <div class="ar">→</div>
+    <div class="st"><b>② 审核</b><span>通过 / 驳回并填原因</span><span class="tag grey">管理员</span></div>
+    <div class="ar">→</div>
+    <div class="st"><b>③ 收货入库</b><span>核对实物，可修正数量</span><span class="tag grey">管理员</span></div>
+    <div class="ar">→</div>
+    <div class="st"><b>④ 浏览预约</b><span>筛选 → 占用 N 件</span><span class="tag orange">学生</span></div>
+    <div class="ar">→</div>
+    <div class="st"><b>⑤ 核销</b><span>凭 8 位领取码放行</span><span class="tag grey">管理员</span></div>
+    <div class="ar">→</div>
+    <div class="st"><b>⑥ 完结</b><span>余量为 0 自动完结</span><span class="tag grey">系统</span></div>
+    <div class="ar">→</div>
+    <div class="st"><b>⑦ 记录沉淀</b><span>双方可查流转履历</span><span class="tag green">双方</span></div>
+  </div>
+
+  <div class="sec-title">页面清单</div>
+  <div class="card">
+    <table class="tb pg-list">
+      <thead>
+        <tr>
+          <th>编号</th><th>页面</th><th>端</th><th>对应功能</th><th>关键设计点</th><th>优先级</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>01</td>
+          <td><a href="01-登录.html">登录</a></td>
+          <td>公共</td>
+          <td>基础能力</td>
+          <td>学号登录、错误提示不泄露账号是否存在、登录后回跳</td>
+          <td><span class="tag grey">P0</span></td>
+        </tr>
+        <tr>
+          <td>02</td>
+          <td><a href="02-发现.html">发现</a></td>
+          <td>用户</td>
+          <td>F3 浏览与筛选</td>
+          <td>四维筛选、余量实时、骨架屏、空态引导</td>
+          <td><span class="tag green">P0</span></td>
+        </tr>
+        <tr>
+          <td>03</td>
+          <td><a href="03-物品详情与预约.html">物品详情与预约</a></td>
+          <td>用户</td>
+          <td>F4 预约与占用</td>
+          <td>余量进度、并发失败提示、流转履历时间轴</td>
+          <td><span class="tag green">P0</span></td>
+        </tr>
+        <tr>
+          <td>04</td>
+          <td><a href="04-捐赠登记.html">捐赠登记</a></td>
+          <td>用户</td>
+          <td>F1 捐赠登记</td>
+          <td>必填项压缩到 6 个、图片前端压缩、驳回后重提</td>
+          <td><span class="tag green">P0</span></td>
+        </tr>
+        <tr>
+          <td>05</td>
+          <td><a href="05-我的记录.html">我的记录</a></td>
+          <td>用户</td>
+          <td>F6 记录与履历</td>
+          <td>我捐的 / 我领的双 Tab、领取码与倒计时、他人信息脱敏</td>
+          <td><span class="tag green">P0</span></td>
+        </tr>
+        <tr>
+          <td>06</td>
+          <td><a href="06-物品管理.html">物品管理</a></td>
+          <td>后台</td>
+          <td>F2 审核与收货</td>
+          <td>三 Tab 分组、驳回必填原因、收货可修正数量</td>
+          <td><span class="tag green">P0</span></td>
+        </tr>
+        <tr>
+          <td>07</td>
+          <td><a href="07-核销台.html">核销台</a></td>
+          <td>后台</td>
+          <td>F5 核销出库</td>
+          <td>8 位码输入、四类失败原因区分、今日待领取排序</td>
+          <td><span class="tag green">P0</span></td>
+        </tr>
+        <tr>
+          <td>08</td>
+          <td><a href="08-统计看板.html">统计看板</a></td>
+          <td>后台</td>
+          <td>F7 统计看板</td>
+          <td>5 个指标、碳减排口径弹窗、滞销判定</td>
+          <td><span class="tag orange">P1</span></td>
+        </tr>
+        <tr>
+          <td>09</td>
+          <td><a href="09-状态与异常.html">状态与异常</a></td>
+          <td>公共</td>
+          <td>N1 四态处理</td>
+          <td>加载 / 失败 / 空 / 无权限，以及关键失败提示</td>
+          <td><span class="tag green">P0</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="notes">
+    <h3>关于这套原型的三个说明<span>给评审与开发的阅读提示</span></h3>
+    <ol>
+      <li><b>页面数与指南口径。</b>指南要求「5—8 个核心业务页面」。本原型 01—08 中，02—08 为 7 个核心页，01 登录与 09 状态页属于支撑页，不计入核心页数量。</li>
+      <li><b>移动端的处理。</b>经需求澄清，本期定位为<b>桌面浏览器运行</b>（Q10 决议），因此在 1280 宽度下设计，不单独绘制移动端版本；窄屏仅保证布局不崩，不做移动专用交互（如底部导航、手势）。</li>
+      <li><b>与文档的对应关系。</b>每个页面标题下方标注了它对应的功能编号（F1—F7）与路由，功能验收标准见《01-项目需求说明书》第 5 章；数据结构与接口见《02-数据结构与系统架构说明》第 3 章。</li>
+    </ol>
+    <div class="tip green">本原型共 10 个文件，公共样式集中在 <b>assets/proto.css</b>，直接双击任一 HTML 即可在浏览器打开，无需服务器。</div>
+  </div>
+
+  <div class="pager">
+    <span>校园旧物捐赠平台 · 产品原型 v1.0</span>
+    <a href="01-登录.html">开始浏览 →</a>
+  </div>
+
+</div>
+</body>
+</html>

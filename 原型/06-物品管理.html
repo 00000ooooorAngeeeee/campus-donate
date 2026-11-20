@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>06 物品管理（后台）· 原型</title>
+<link rel="stylesheet" href="assets/proto.css">
+<style>
+  .atabs{display:flex;gap:6px;margin-bottom:16px}
+  .atab{height:32px;padding:0 15px;border:1px solid var(--line);border-radius:6px;background:#fff;display:flex;align-items:center;
+    font-size:12.5px;color:var(--ink2);gap:7px}
+  .atab.on{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:500}
+  .atab .c{font-size:11px;padding:0 5px;height:16px;line-height:16px;border-radius:8px;background:#F0F0EA;color:var(--ink2)}
+  .atab.on .c{background:rgba(255,255,255,.22);color:#fff}
+
+  .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .toolbar .input{width:240px;height:32px}
+  .toolbar .select{width:150px;height:32px}
+  .toolbar .right{margin-left:auto;display:flex;gap:10px}
+
+  .thumb-s{width:44px;height:44px;border-radius:4px}
+  .tb .ck{width:16px;height:16px;border:1px solid #C4C4BB;border-radius:3px;display:inline-block;background:#fff}
+  .tb .ck.on{background:var(--primary);border-color:var(--primary);position:relative}
+  .tb .ck.on::after{content:"";position:absolute;left:4px;top:1px;width:5px;height:9px;border:2px solid #fff;
+    border-top:0;border-left:0;transform:rotate(42deg)}
+  .tb-title{font-size:12.5px;font-weight:500;margin-bottom:3px}
+  .tb-sub{font-size:11px;color:var(--ink3)}
+
+  .overlay-wrap{position:relative}
+  .mask{position:absolute;inset:0;background:rgba(30,30,28,.38);display:flex;align-items:center;justify-content:center;z-index:20}
+  .modal{width:472px;background:#fff;border-radius:10px;padding:22px 26px 20px;box-shadow:0 12px 40px rgba(0,0,0,.22)}
+  .modal h3{margin:0 0 4px;font-size:16px;font-weight:600}
+  .modal .ms{font-size:12px;color:var(--ink3);margin:0 0 18px}
+  .modal .mrow{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed var(--line2);font-size:12.5px}
+  .modal .mrow span{color:var(--ink3)}
+  .modal .mrow b{font-weight:500}
+  .modal .mfield{margin:18px 0 0}
+  .modal .macts{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
+  .warn-line{margin-top:10px;background:var(--warn-s);border:1px solid #F0DCB4;border-radius:6px;padding:9px 12px;font-size:11.5px;color:#8A5E12}
+  .warn-line b{font-weight:600}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="doc-head">
+    <div class="meta">P06 / 管理后台<br>路由 <b>/admin/items</b><br>F2 审核与收货 · P0</div>
+    <h1>物品管理</h1>
+    <div class="sub">审核、收货、下架三件事收在一个页面，管理员不必在多个菜单之间来回跳</div>
+  </div>
+
+  <div class="frame">
+    <div class="frame-bar"><b>物品管理 · 待审核 Tab</b><span>1280 × 约 760</span></div>
+    <div class="screen">
+      <div class="admin">
+
+        <aside class="side">
+          <div class="side-brand"><span>拾</span>拾光 管理后台</div>
+          <nav>
+            <a class="on">物品管理</a>
+            <a>核销台</a>
+            <a>统计看板</a>
+          </nav>
+          <div class="side-foot">管理员 admin01<br>学生资助中心</div>
+        </aside>
+
+        <div class="main">
+          <div class="admin-top">
+            <h2>物品管理</h2>
+            <div class="right">
+              <span>今天是 2026-11-20</span>
+              <a>退出登录</a>
+            </div>
+          </div>
+
+          <div class="body">
+
+            <div class="atabs">
+              <span class="atab on">待审核 <span class="c">12</span><i class="mk">1</i></span>
+              <span class="atab">待收货 <span class="c">5</span></span>
+              <span class="atab">在架 <span class="c">68</span></span>
+              <span class="atab">已驳回 <span class="c">3</span></span>
+              <span class="atab">已下架 <span class="c">2</span></span>
+            </div>
+
+            <div class="toolbar">
+              <div class="input placeholder">搜索物品标题或入库编号</div>
+              <div class="select"><span>全部品类</span><span class="caret">▾</span></div>
+              <div class="right">
+                <button class="btn sm">批量驳回</button>
+                <button class="btn sm btn-primary">批量通过</button>
+              </div>
+            </div>
+
+            <div class="card">
+              <table class="tb">
+                <thead>
+                  <tr>
+                    <th style="width:40px"><span class="ck"></span><i class="mk">2</i></th>
+                    <th style="width:58px">图片</th>
+                    <th>物品 / 登记人</th>
+                    <th style="width:110px">品类</th>
+                    <th style="width:70px">数量</th>
+                    <th style="width:110px">提交时间</th>
+                    <th style="width:80px">状态</th>
+                    <th style="width:130px">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="ck"></span></td>
+                    <td><div class="ph thumb-s"><span></span></div></td>
+                    <td>
+                      <div class="tb-title">高等数学 第七版（上下册）+ 习题册</div>
+                      <div class="tb-sub">李明 · 2022010101 · 一食堂西侧驿站</div>
+                    </td>
+                    <td><span class="tag">教材书籍</span></td>
+                    <td>5 件</td>
+                    <td>11-18 14:20</td>
+                    <td><span class="tag grey"><span class="dot"></span>待审核</span></td>
+                    <td>
+                      <div class="ops">
+                        <a>通过</a>
+                        <a class="danger">驳回</a>
+                        <a>详情</a>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="ck"></span></td>
+                    <td><div class="ph thumb-s"><span></span></div></td>
+                    <td>
+                      <div class="tb-title">羽绒服 男款 L 码 深蓝色</div>
+                      <div class="tb-sub">王小雨 · 2022010233 · 一食堂西侧驿站</div>
+                    </td>
+                    <td><span class="tag">衣物鞋帽</span></td>
+                    <td>2 件</td>
+                    <td>11-19 09:44</td>
+                    <td><span class="tag grey"><span class="dot"></span>待审核</span></td>
+                    <td>
+                      <div class="ops"><a>通过</a><a class="danger">驳回</a><a>详情</a></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="ck"></span></td>
+                    <td><div class="ph thumb-s"><span></span></div></td>
+                    <td>
+                      <div class="tb-title">护眼台灯 三档调光 含灯泡</div>
+                      <div class="tb-sub">李明 · 2022010101 · 三号宿舍楼下驿站</div>
+                    </td>
+                    <td><span class="tag">小家电与数码</span></td>
+                    <td>1 件</td>
+                    <td>11-19 20:11</td>
+                    <td><span class="tag grey"><span class="dot"></span>待审核</span></td>
+                    <td>
+                      <div class="ops"><a>通过</a><a class="danger">驳回</a><a>详情</a></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="ck"></span></td>
+                    <td><div class="ph thumb-s"><span></span></div></td>
+                    <td>
+                      <div class="tb-title">考研英语真题 2015—2025 全册</div>
+                      <div class="tb-sub">陈思远 · 2022010455 · 一食堂西侧驿站</div>
+                    </td>
+                    <td><span class="tag">教材书籍</span></td>
+                    <td>6 件</td>
+                    <td>11-20 10:32</td>
+                    <td><span class="tag grey"><span class="dot"></span>待审核</span></td>
+                    <td>
+                      <div class="ops"><a>通过</a><a class="danger">驳回</a><a>详情</a></div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="ck"></span></td>
+                    <td><div class="ph thumb-s"><span></span></div></td>
+                    <td>
+                      <div class="tb-title">床上四件套 1.2 米床 已清洗</div>
+                      <div class="tb-sub">赵一鸣 · 2022010377 · 三号宿舍楼下驿站</div>
+                    </td>
+                    <td><span class="tag">生活用品</span></td>
+                    <td>1 件</td>
+                    <td>11-20 11:05</td>
+                    <td><span class="tag grey"><span class="dot"></span>待审核</span></td>
+                    <td>
+                      <div class="ops"><a>通过</a><a class="danger">驳回</a><a>详情</a></div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="pgn">
+                <span>共 12 条</span>
+                <span class="pg">‹</span>
+                <span class="pg on">1</span>
+                <span class="pg">2</span>
+                <span class="pg">3</span>
+                <span class="pg">›</span>
+                <i class="mk">3</i>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="frame">
+    <div class="frame-bar"><b>物品管理 · 收货确认弹窗（待收货 Tab）</b><span>1280 × 约 720</span></div>
+    <div class="screen">
+      <div class="admin">
+        <aside class="side">
+          <div class="side-brand"><span>拾</span>拾光 管理后台</div>
+          <nav>
+            <a class="on">物品管理</a>
+            <a>核销台</a>
+            <a>统计看板</a>
+          </nav>
+          <div class="side-foot">管理员 admin01<br>学生资助中心</div>
+        </aside>
+
+        <div class="main overlay-wrap">
+          <div class="admin-top">
+            <h2>物品管理</h2>
+            <div class="right"><span>今天是 2026-11-20</span><a>退出登录</a></div>
+          </div>
+          <div class="body">
+            <div class="atabs">
+              <span class="atab">待审核 <span class="c">12</span></span>
+              <span class="atab on">待收货 <span class="c">5</span></span>
+              <span class="atab">在架 <span class="c">68</span></span>
+              <span class="atab">已驳回 <span class="c">3</span></span>
+              <span class="atab">已下架 <span class="c">2</span></span>
+            </div>
+            <div class="card">
+              <table class="tb">
+                <thead>
+                  <tr>
+                    <th style="width:40px"><span class="ck"></span></th>
+                    <th style="width:58px">图片</th>
+                    <th>物品 / 登记人</th>
+                    <th style="width:110px">申报数量</th>
+                    <th style="width:110px">审核通过</th>
+                    <th style="width:130px">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="ck"></span></td>
+                    <td><div class="ph thumb-s"><span></span></div></td>
+                    <td>
+                      <div class="tb-title">高等数学 第七版（上下册）+ 习题册</div>
+                      <div class="tb-sub">李明 · 2022010101 · 一食堂西侧驿站</div>
+                    </td>
+                    <td>5 件</td>
+                    <td>11-18 16:02</td>
+                    <td><div class="ops"><a>收货确认</a><a class="danger">退回</a></div></td>
+                  </tr>
+                  <tr>
+                    <td><span class="ck"></span></td>
+                    <td><div class="ph thumb-s"><span></span></div></td>
+                    <td>
+                      <div class="tb-title">斯伯丁篮球 七成新 已充气</div>
+                      <div class="tb-sub">孙浩 · 2022010511 · 一食堂西侧驿站</div>
+                    </td>
+                    <td>2 件</td>
+                    <td>11-19 10:20</td>
+                    <td><div class="ops"><a>收货确认</a><a class="danger">退回</a></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="mask">
+            <div class="modal">
+              <h3>收货确认</h3>
+              <p class="ms">请核对实物，确认后物品将出现在「发现」页供领取</p>
+
+              <div class="mrow"><span>物品</span><b>高等数学 第七版（上下册）+ 习题册</b></div>
+              <div class="mrow"><span>登记人</span><b>李明 · 2022010101</b></div>
+              <div class="mrow"><span>申报数量</span><b>5 件</b></div>
+              <div class="mrow"><span>送达驿站</span><b>一食堂西侧 · 爱心驿站</b></div>
+
+              <div class="mfield">
+                <label class="label">实收数量<i class="mk">4</i></label>
+                <div class="row" style="align-items:center;gap:12px">
+                  <div class="select" style="width:120px;height:34px"><span>4</span><span class="caret">▾</span></div>
+                  <span class="f12 dim">件</span>
+                  <span class="f12" style="color:var(--warn)">与申报数量相差 1 件</span>
+                </div>
+                <div class="warn-line"><b>注意：</b>实收数量将与申报不一致的情况记入流转履历，并通知捐赠人。<i class="mk">5</i></div>
+              </div>
+
+              <div class="macts">
+                <button class="btn btn-ghost">取消</button>
+                <button class="btn btn-primary" style="min-width:110px">确认入库</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <h3>交互说明</h3>
+    <ol>
+      <li><b>Tab 分组。</b>按状态分组而不是给一列状态筛选器——管理员的工作是「处理积压」，分组比筛选更符合任务模型。角标显示各组的待处理量，数量为 0 的组变灰但仍可进入。</li>
+      <li><b>批量操作。</b>表头复选框支持跨页全选当前筛选结果。批量通过直接执行；<b>批量驳回会弹出统一原因输入框</b>，因为驳回必须带原因（业务规则 BR）。选中项跨页保留，用浮动条提示「已选 5 项」并提供清空。</li>
+      <li><b>分页。</b>默认每页 10 条，按提交时间<b>升序</b>——先提交的先处理，避免老单据一直积压。这一处排序方向与用户端相反，是刻意的。</li>
+      <li><b>收货数量修正。</b>申报 5 件、实收 4 件是真实场景中的高频情况（毕业生少装、路上损耗）。系统允许修正，但<b>必须留痕</b>：差额写入流转履历，捐赠人在「我的记录」能看到「收货修正：申报 5 件，实收 4 件」。不做静默修改。</li>
+      <li><b>修正提示。</b>数量不一致时输入框下方出现黄色提示条，明确告知会计入履历，让管理员知道这不是「悄悄改一下」。</li>
+    </ol>
+    <div class="tip">「驳回」与「退回」是两个不同动作：<b>驳回</b>针对待审核批次（信息不合规），<b>退回</b>针对待收货批次（实物与申报严重不符），两者都会让批次回到捐赠者手里，但原因分类不同。</div>
+    <div class="tip red">下架受限制：批次存在未核销预约时禁止下架（业务规则 BR-05），操作会提示「有 N 个预约未领取，需先取消」，并提供一键取消入口——不允许出现「东西没了但还有人拿着码」的状态。</div>
+  </div>
+
+  <div class="pager">
+    <a href="05-我的记录.html">← 05 我的记录</a>
+    <a href="07-核销台.html">07 核销台 →</a>
+  </div>
+
+</div>
+</body>
+</html>
