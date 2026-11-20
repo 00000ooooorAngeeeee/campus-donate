@@ -54,7 +54,7 @@
 | 前端 | Vue 3.4 + TypeScript(strict) + Vite 5 + Vue Router 4 + Pinia + axios + zod |
 | UI | 用户端手写 CSS + 设计 token；后台 Element Plus |
 | 图表 | ECharts 5 |
-| 后端 | Node 20 + Express 4 + Prisma 5 + SQLite（**薄后端**：≤20 接口，不做分层） |
+| 后端 | Node 20 + Express 4 + Prisma 6 + SQLite（**薄后端**：≤20 接口，不做分层） |
 | 认证 | JWT 单 token + bcryptjs |
 | 包管理 | npm |
 

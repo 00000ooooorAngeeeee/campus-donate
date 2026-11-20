@@ -1,0 +1,156 @@
+// 拾光 · 校园旧物捐赠平台 —— 数据模型
+// SQLite 不支持枚举类型，所有枚举字段以 String 存储，取值约束见各字段注释与
+// 《02-数据结构与系统架构说明》§2.3。
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// 用户：学生与管理员共用一张表，靠 role 区分
+model User {
+  id           Int       @id @default(autoincrement())
+  studentNo    String    @unique // 学号，即登录账号
+  name         String
+  passwordHash String // bcrypt，cost 10
+  role         String    @default("STUDENT") // STUDENT | ADMIN
+  phone        String? // 学生端仅展示尾号四位
+  avatarUrl    String?
+  building     String? // 宿舍楼，仅用于画像统计
+  createdAt    DateTime  @default(now())
+  lastLoginAt  DateTime?
+
+  donations          Item[]        @relation("Donor")
+  reservations       Reservation[] @relation("Reserver")
+  collectedRecords   Reservation[] @relation("Collector")
+  itemLogs           ItemLog[]
+
+}
+
+/// 品类：字典表，同时承载碳减排折算系数
+model Category {
+  id              Int     @id @default(autoincrement())
+  name            String  @unique // 教材书籍 / 衣物鞋帽 / 生活用品 / 小家电与数码 / 文具杂物 / 体育器材
+  slug            String  @unique // 用于路由与筛选参数
+  icon            String // SVG 图标名
+  weightPerUnitKg Float   @default(1.0) // 单件估重
+  co2FactorPerKg  Float   @default(1.0) // 单位碳因子
+  sortOrder       Int     @default(0)
+  active          Boolean @default(true) // 停用后不出现在筛选
+
+  items Item[]
+
+}
+
+/// 驿站：送达与领取的线下点位
+model Station {
+  id           Int     @id @default(autoincrement())
+  name         String // 如"一食堂西侧爱心驿站"
+  address      String
+  openHours    String // 如"周一至周五 10:00-18:00"
+  contactPhone String?
+  active       Boolean @default(true)
+
+  items Item[]
+
+}
+
+/// 物品批次（核心表）
+model Item {
+  id           Int       @id @default(autoincrement())
+  code         String?   @unique // 入库编号 SR-2026-0001，收货确认时生成
+  title        String // ≤40 字
+  description  String // ≥10 字
+  categoryId   Int
+  stationId    Int
+  condition    String // NEW | GOOD | USABLE
+  imagesJson   String    @default("[]") // JSON 数组，存相对路径
+  totalQty     Int
+  reservedQty  Int       @default(0) // 已预约未核销
+  collectedQty Int       @default(0) // 已核销
+  status       String    @default("PENDING") // PENDING | REJECTED | RECEIVING | ON_SHELF | OFFLINE | CLOSED
+  donorId      Int
+  rejectReason String? // 当前驳回原因
+  submittedAt  DateTime  @default(now())
+  receivedAt   DateTime?
+  shelfAt      DateTime?
+  closedAt     DateTime?
+  updatedAt    DateTime  @updatedAt
+
+  category     Category      @relation(fields: [categoryId], references: [id])
+  station      Station       @relation(fields: [stationId], references: [id])
+  donor        User          @relation("Donor", fields: [donorId], references: [id])
+  reservations Reservation[]
+  logs         ItemLog[]
+
+  // 发现页按品类筛选在架
+  @@index([status, categoryId])
+  // 按驿站筛选
+  @@index([status, stationId])
+  // 我捐的
+  @@index([donorId, submittedAt])
+  // 滞销判定（在架超 30 天）
+  @@index([status, shelfAt])
+}
+
+/// 预约单
+model Reservation {
+  id           Int       @id @default(autoincrement())
+  code         String    @unique // 8 位领取码，大写字母+数字，去掉易混字符 O/0/I/1
+  itemId       Int
+  userId       Int // 领取人
+  qty          Int // 占用数量，1～余量
+  status       String    @default("PENDING") // PENDING | COLLECTED | CANCELLED | EXPIRED
+  expireAt     DateTime // 创建时 = now + 3 天
+  createdAt    DateTime  @default(now())
+  collectedAt  DateTime? // 核销时间
+  collectedBy  Int? // 核销人
+  cancelledAt  DateTime?
+  cancelReason String? // 学生取消 / 超时回收 / 下架取消
+
+  item            Item    @relation(fields: [itemId], references: [id])
+  user            User    @relation("Reserver", fields: [userId], references: [id])
+  collector       User?   @relation("Collector", fields: [collectedBy], references: [id])
+  logs            ItemLog[]
+
+  // 我的领取 + 上限校验
+  @@index([userId, status])
+  // 下架前校验未核销数
+  @@index([itemId, status])
+  // 超时扫描
+  @@index([status, expireAt])
+}
+
+/// 流转日志：物品履历时间轴的数据来源
+model ItemLog {
+  id            Int      @id @default(autoincrement())
+  itemId        Int
+  reservationId Int? // 预约事件才有
+  scope         String // BATCH | RESERVATION
+  action        String // SUBMIT / APPROVE / REJECT / RESUBMIT / RECEIVE / QTY_ADJUST /
+  // OFFLINE / CLOSE / RESERVE / COLLECT / CANCEL / EXPIRE / CANCEL_BY_OFFLINE
+  qty           Int?
+  fromStatus    String?
+  toStatus      String?
+  operatorId    Int // 操作人
+  note          String? // 补充说明（如收货修正差额）
+  createdAt     DateTime @default(now())
+
+  item        Item         @relation(fields: [itemId], references: [id])
+  reservation Reservation? @relation(fields: [reservationId], references: [id])
+  operator    User         @relation(fields: [operatorId], references: [id])
+
+  // 时间轴渲染
+  @@index([itemId, createdAt])
+}
+
+/// 系统配置（可选）
+model SystemConfig {
+  key         String @id // reservation.ttlDays / reservation.maxPending
+  value       String // 存字符串，读取时转型
+  description String
+}

@@ -46,7 +46,7 @@
 后台 UI：Element Plus（仅 /admin 路由下使用）
 用户端 UI：手写 CSS + 设计 token，不使用组件库
 图表：ECharts 5
-后端：Node 20 + Express 4 + Prisma 5 + SQLite，JWT 单 token，bcryptjs，multer
+后端：Node 20 + Express 4 + Prisma 6 + SQLite，JWT 单 token，bcryptjs，multer
 包管理：npm
 
 【硬性约束，违反即返工】
@@ -140,19 +140,20 @@
 
 ```
 【先读】
-docs/02-数据结构与系统架构说明.md 第 2 章（表定义、枚举、索引）
+docs/02-数据结构与系统架构说明.md 第 2 章（表定义、取值约定、索引）
 docs/01-项目需求说明书.md 第 4.5 节（业务规则 BR-01~12）
 
 【任务】
 1. 在 project/backend/prisma/schema.prisma 中定义 7 个模型：
    User / Category / Station / Item / Reservation / ItemLog / SystemConfig，
    字段名、类型、默认值与架构文档 2.2 完全一致，不要自己改名或增删字段。
-2. 定义 5 个枚举：Role / Condition / ItemStatus / ResStatus / LogScope。
+2. 定义 5 组取值约定（String 字段 + 常量数组，SQLite 不支持 enum）：
+   role / condition / Item.status / Reservation.status / ItemLog.scope，取值见架构文档 2.3。
 3. 按架构文档 2.4 建索引（Prisma 用 @@index）。
 4. 生成并执行首次迁移，确认 dev.db 创建成功。
 5. 写 project/backend/prisma/seed.ts，要求幂等：重复执行两次，数据量不翻倍。
 6. 种子内容：
-   - 2 个管理员（admin01 / admin02，密码 admin123）
+   - 2 个管理员（admin / admin02，密码 admin123）
    - 10 个学生（学号 2022010101 起，密码 123456，其中 1 个无任何记录用于演示空态）
    - 6 个品类，带 weightPerUnitKg 与 co2FactorPerKg（取需求说明书附录 10 的系数表）
    - 2 个驿站（一食堂西侧、三号宿舍楼下），含 openHours
