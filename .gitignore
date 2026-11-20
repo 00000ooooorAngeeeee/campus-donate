@@ -17,7 +17,8 @@ dist-ssr/
 *.db-journal
 *.sqlite
 *.sqlite3
-project/backend/uploads/
+project/backend/uploads/*
+!project/backend/uploads/.gitkeep
 project/backend/prisma/dev.db
 
 # 日志
