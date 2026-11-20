@@ -24,10 +24,10 @@
 
 | 归属 | 独占目录 / 文件 | 说明 |
 | --- | --- | --- |
-| **A** | `server/prisma/**`、`server/src/lib/**`、`server/src/middleware/**`、`server/src/routes/admin.ts`、`server/src/routes/reservations.ts`、`web/src/views/admin/items/`、`web/src/views/admin/redeem/` | schema 唯一修改人，其他人只能读 |
-| **B** | `web/src/views/discover/`、`item-detail/`、`donate/`、`my-records/`、`web/src/components/**`、`web/src/styles/**`、`server/src/routes/items.ts`、`server/src/routes/my.ts` | 组件与样式归 B，A/C 复用但不要改 |
-| **C** | `web/src/views/admin/dashboard/`、`web/src/views/login/`、`web/src/api/auth.ts`、`server/src/routes/auth.ts`、`server/src/routes/stats.ts`、`docs/**` | 文档与看板归 C |
-| 共用只读 | `server/src/index.ts`、`web/src/router/**`、`web/src/api/http.ts`、`web/src/stores/**` | 需要改动时先在群里说一声，由 A 统一改 |
+| **A** | `project/backend/prisma/**`、`project/backend/src/lib/**`、`project/backend/src/middleware/**`、`project/backend/src/routes/admin.ts`、`project/backend/src/routes/reservations.ts`、`project/front/src/views/admin/items/`、`project/front/src/views/admin/redeem/` | schema 唯一修改人，其他人只能读 |
+| **B** | `project/front/src/views/discover/`、`item-detail/`、`donate/`、`my-records/`、`project/front/src/components/**`、`project/front/src/styles/**`、`project/backend/src/routes/items.ts`、`project/backend/src/routes/my.ts` | 组件与样式归 B，A/C 复用但不要改 |
+| **C** | `project/front/src/views/admin/dashboard/`、`project/front/src/views/login/`、`project/front/src/api/auth.ts`、`project/backend/src/routes/auth.ts`、`project/backend/src/routes/stats.ts`、`docs/**` | 文档与看板归 C |
+| 共用只读 | `project/backend/src/index.ts`、`project/front/src/router/**`、`project/front/src/api/http.ts`、`project/front/src/stores/**` | 需要改动时先在群里说一声，由 A 统一改 |
 
 ---
 
@@ -60,7 +60,7 @@
    影响行数为 1 才算成功，否则返回错误码 3001。
 4. 状态只能由后端校验变更，前端按钮显隐不算权限。
 5. 所有列表页必须处理四态：加载中(骨架屏) / 加载失败(带重试) / 无数据(带引导) / 无权限。
-6. 类型定义前后端共享，放在 web/src/types/ 与 server/src/lib/schema.ts，用 zod 定义后导出 z.infer。
+6. 类型定义前后端共享，放在 project/front/src/types/ 与 project/backend/src/lib/schema.ts，用 zod 定义后导出 z.infer。
 7. 注释用中文，写"为什么"不写"是什么"。
 
 【业务规则】
@@ -80,7 +80,7 @@
 
 【不要做】
 - 不要引入上下文未提到的新依赖，需要时先问我
-- 不要改动 prisma/schema.prisma（除非当前任务明确要求）
+- 不要改动 project/backend/prisma/schema.prisma（除非当前任务明确要求）
 - 不要"顺便重构"已经能跑的代码
 - 不要生成 README、变更说明、示例配置等我没要求的文件
 ```
@@ -144,13 +144,13 @@ docs/02-数据结构与系统架构说明.md 第 2 章（表定义、枚举、�
 docs/01-项目需求说明书.md 第 4.5 节（业务规则 BR-01~12）
 
 【任务】
-1. 在 server/prisma/schema.prisma 中定义 7 个模型：
+1. 在 project/backend/prisma/schema.prisma 中定义 7 个模型：
    User / Category / Station / Item / Reservation / ItemLog / SystemConfig，
    字段名、类型、默认值与架构文档 2.2 完全一致，不要自己改名或增删字段。
 2. 定义 5 个枚举：Role / Condition / ItemStatus / ResStatus / LogScope。
 3. 按架构文档 2.4 建索引（Prisma 用 @@index）。
 4. 生成并执行首次迁移，确认 dev.db 创建成功。
-5. 写 server/prisma/seed.ts，要求幂等：重复执行两次，数据量不翻倍。
+5. 写 project/backend/prisma/seed.ts，要求幂等：重复执行两次，数据量不翻倍。
 6. 种子内容：
    - 2 个管理员（admin01 / admin02，密码 admin123）
    - 10 个学生（学号 2022010101 起，密码 123456，其中 1 个无任何记录用于演示空态）
@@ -187,17 +187,17 @@ docs/01-项目需求说明书.md 第 4.5 节（业务规则 BR-01~12）
 【先读】docs/02-数据结构与系统架构说明.md 第 1.4、6.2、7 章
 
 【任务】
-1. server/src/lib/response.ts：封装 ok(data) 与 fail(code, message)，统一 { code, message, data }。
-2. server/src/lib/errors.ts：定义 BizError 类（携带 code + message）。
-3. server/src/lib/prisma.ts：导出单例 PrismaClient。
-4. server/src/lib/jwt.ts：签发与校验，payload 含 { id, role }，有效期 7 天。
-5. server/src/middleware/auth.ts：解析 Bearer token，挂到 req.user；失败抛 1002。
-6. server/src/middleware/role.ts：高阶函数 requireRole('ADMIN')，失败抛 1003。
-7. server/src/middleware/validate.ts：接收 zod schema，校验 body/query，失败抛 1001
+1. project/backend/src/lib/response.ts：封装 ok(data) 与 fail(code, message)，统一 { code, message, data }。
+2. project/backend/src/lib/errors.ts：定义 BizError 类（携带 code + message）。
+3. project/backend/src/lib/prisma.ts：导出单例 PrismaClient。
+4. project/backend/src/lib/jwt.ts：签发与校验，payload 含 { id, role }，有效期 7 天。
+5. project/backend/src/middleware/auth.ts：解析 Bearer token，挂到 req.user；失败抛 1002。
+6. project/backend/src/middleware/role.ts：高阶函数 requireRole('ADMIN')，失败抛 1003。
+7. project/backend/src/middleware/validate.ts：接收 zod schema，校验 body/query，失败抛 1001
    并把第一个字段错误拼进 message（例如"标题至少 4 个字"）。
-8. server/src/middleware/errorHandler.ts：兜底捕获，BizError 按其 code 返回，
+8. project/backend/src/middleware/errorHandler.ts：兜底捕获，BizError 按其 code 返回，
    其他异常统一 5000 并 console.error 原始堆栈，不返回给前端。
-9. server/src/index.ts：装配 express.json、cookie、静态托管 uploads/、
+9. project/backend/src/index.ts：装配 express.json、cookie、静态托管 uploads/、
    各路由前缀、404 处理、errorHandler；端口读 .env 的 PORT（默认 3001）。
 10. 建 .env.example，含 PORT / DATABASE_URL / JWT_SECRET 三项说明。
 
@@ -227,22 +227,22 @@ docs/02-数据结构与系统架构说明.md 第 6 章
 大作业/原型/09-状态与异常.html（看四态的设计意图）
 
 【任务】
-1. Vite 初始化 web/，开 TypeScript strict，配 @ 别名指向 src。
-2. web/src/styles/tokens.css：落地架构文档 6.4 的设计 token（颜色/字阶/间距/圆角/阴影/动效），
+1. Vite 初始化 project/front/，开 TypeScript strict，配 @ 别名指向 src。
+2. project/front/src/styles/tokens.css：落地架构文档 6.4 的设计 token（颜色/字阶/间距/圆角/阴影/动效），
    全部用 CSS 变量，命名用 --c- / --fs- / --sp- / --r- / --sh- / --dur- 前缀。
-3. web/src/styles/base.css：reset、字体栈、正文行高、focus-visible 样式（可见的 2px 主色描边）。
-4. web/src/api/http.ts：axios 实例，baseURL /api，超时 10s；
+3. project/front/src/styles/base.css：reset、字体栈、正文行高、focus-visible 样式（可见的 2px 主色描边）。
+4. project/front/src/api/http.ts：axios 实例，baseURL /api，超时 10s；
    请求拦截带 token，响应拦截解包 data、把非 0 code 转成 BizError、401 清 token 并跳登录。
-5. web/src/router/index.ts：定义 10 条路由（7 个核心页 + 登录 + 403 + 404），
+5. project/front/src/router/index.ts：定义 10 条路由（7 个核心页 + 登录 + 403 + 404），
    全部懒加载，后台路由加 meta.requiresRole = 'ADMIN'。
-6. web/src/router/guards.ts：全局前置守卫，未登录跳 /login?redirect=，角色不符跳 /403。
-7. web/src/stores/user.ts：token、userInfo、login()、logout()、isAdmin。
-8. web/src/stores/dict.ts：categories 与 stations，带 1 小时内存缓存。
-9. web/src/composables/useRequest.ts：返回 { data, loading, error, refresh }，
+6. project/front/src/router/guards.ts：全局前置守卫，未登录跳 /login?redirect=，角色不符跳 /403。
+7. project/front/src/stores/user.ts：token、userInfo、login()、logout()、isAdmin。
+8. project/front/src/stores/dict.ts：categories 与 stations，带 1 小时内存缓存。
+9. project/front/src/composables/useRequest.ts：返回 { data, loading, error, refresh }，
    统一 try/catch，不吞错误但要转成可展示文案。
-10. web/src/components/base/AsyncState.vue：props 为 loading / error / empty，
+10. project/front/src/components/base/AsyncState.vue：props 为 loading / error / empty，
     四个插槽或内置态：骨架屏、错误态(带重试按钮)、空态(带引导按钮)、默认内容。
-11. web/src/components/base/ 下补 EmptyState.vue、ErrorState.vue、SkeletonCard.vue、
+11. project/front/src/components/base/ 下补 EmptyState.vue、ErrorState.vue、SkeletonCard.vue、
     AppButton.vue、AppTag.vue。
 12. 三个布局壳：SiteHeader.vue（用户端顶栏）、AdminSidebar.vue（后台侧栏）、PageContainer.vue。
 
@@ -269,13 +269,13 @@ docs/02-数据结构与系统架构说明.md 第 6 章
 【先读】大作业/原型/01-登录.html、docs/01-项目需求说明书.md F 章节前的 §1.3
 
 【任务】
-1. server/src/routes/auth.ts：
+1. project/backend/src/routes/auth.ts：
    - POST /api/auth/login：zod 校验 studentNo + password，查 User，bcrypt 比对，
      成功返回 { token, user: { id, name, role, studentNo } }；
      失败统一返回 1002 且 message 为「学号或密码错误」（不区分账号是否存在）。
    - GET /api/auth/me：需登录，返回当前用户。
    - POST /api/auth/logout：记一条日志即可，返回 ok。
-2. web/src/views/login/LoginView.vue：按原型实现左右分栏——
+2. project/front/src/views/login/LoginView.vue：按原型实现左右分栏——
    左侧品牌区（logo、主标题、三条卖点、插画占位），右侧表单（学号、密码、登录按钮、演示账号卡）。
 3. 表单用 zod 做前端校验，错误定位到字段下方，输入框转红。
 4. 登录成功后按 role 分流：STUDENT → /discover，ADMIN → /admin/items；
@@ -308,12 +308,12 @@ docs/02-数据结构与系统架构说明.md 第 6 章
 docs/02-数据结构与系统架构说明.md 3.1 接口表第 6 条
 
 【任务】
-1. server/src/routes/items.ts 增加 GET /api/items：
+1. project/backend/src/routes/items.ts 增加 GET /api/items：
    查询参数 categoryId / stationId / condition(可多值) / keyword / onlyAvailable / page / size；
    只返回 status = ON_SHELF 的批次；返回时计算 available；
    关键词匹配 title 与 description；按 submittedAt 倒序；
    返回 { list, total, page, size }，list 项含 id/title/categoryName/condition/images/available/totalQty/stationName。
-2. web/src/views/discover/DiscoverView.vue：
+2. project/front/src/views/discover/DiscoverView.vue：
    - 运营位：本季主题、累计流转件数、累计减碳、离校倒计时（倒计时天数读一个常量配置即可）
    - 筛选区：品类胶囊单选、驿站下拉、成色多选胶囊、"仅看有货"开关、搜索框
    - 结果头：共 N 件 + 排序（最新入库 / 余量从多到少 / 减碳量）
@@ -351,7 +351,7 @@ docs/02-数据结构与系统架构说明.md 4.2、4.3、5 章
 docs/01-项目需求说明书.md F4、§4.4 异常流程
 
 【任务】
-1. server/src/routes/reservations.ts：
+1. project/backend/src/routes/reservations.ts：
    - POST /api/items/:id/reservations
      · 校验 qty 为 1..可用量 的正整数
      · 校验该用户未领取预约单数 < 2，否则 3005
@@ -364,7 +364,7 @@ docs/01-项目需求说明书.md F4、§4.4 异常流程
    - POST /api/reservations/:id/cancel
      · 仅本人可操作；状态必须为 PENDING，否则 3002
      · 事务内 reservedQty -= qty，Reservation 置 CANCELLED，写日志
-2. server/src/lib/expire.ts：export async function sweepExpired(scope) 
+2. project/backend/src/lib/expire.ts：export async function sweepExpired(scope) 
    支持 'user' | 'item' | 'all' 三种范围；
    逻辑：把 now > expireAt 且 status=PENDING 的预约置 EXPIRED，
    同时归还 reservedQty，并写 ItemLog(action=EXPIRE)。
@@ -397,11 +397,11 @@ docs/01-项目需求说明书.md F4、§4.4 异常流程
 docs/02-数据结构与系统架构说明.md 3.1 第 7 条
 
 【任务】
-1. server/src/routes/items.ts 增加 GET /api/items/:id：
+1. project/backend/src/routes/items.ts 增加 GET /api/items/:id：
    返回批次详情 + available + 驿站信息 + 按时间升序的履历数组。
    履历每项含 { action, actionLabel, qty, createdAt, operatorRole, operatorName }；
    **学生视角下 operatorName 一律替换为「某同学」或「驿站管理员」**，不返回学号。
-2. web/src/views/item-detail/DetailView.vue：按原型实现
+2. project/front/src/views/item-detail/DetailView.vue：按原型实现
    - 左侧图片轮播（主图 + 缩略图，点击切换，用占位块）
    - 右侧标题、标签行（品类/成色/在架状态/减碳估算）、余量三段进度条、
      驿站卡片（名称+地址+营业时间+领取方式）、数量步进器、立即预约按钮
@@ -438,14 +438,14 @@ docs/02-数据结构与系统架构说明.md 3.1 第 7 条
 【先读】大作业/原型/04-捐赠登记.html、docs/01-项目需求说明书.md F1 小节
 
 【任务】
-1. server/src/routes/items.ts 增加：
+1. project/backend/src/routes/items.ts 增加：
    - POST /api/items：zod 校验 6 个必填项（标题≥4、品类、成色、数量 1..20、驿站、描述≥10），
      创建批次 status=PENDING，写 ItemLog(SUBMIT)，返回批次 id。
    - PATCH /api/items/:id：仅本人且 status=REJECTED 时可调用；
      更新字段后 status 回到 PENDING，写 ItemLog(RESUBMIT)，保留原 rejectReason 到日志 note。
 2. 图片上传：POST /api/upload（multer，单文件≤5MB，仅 jpg/png/webp），
-   存 server/uploads/，文件名用 uuid，返回 { url }。放在 items 路由文件内即可。
-3. web/src/views/donate/DonateView.vue：
+   存 project/backend/uploads/，文件名用 uuid，返回 { url }。放在 items 路由文件内即可。
+3. project/front/src/views/donate/DonateView.vue：
    - 表单顺序与原型一致：标题、品类胶囊、成色分段、数量步进、驿站下拉、描述、图片
    - 图片选择后**立即用 canvas 压缩**（长边 1280、质量 0.82、优先 WebP），
      压缩完成才显示缩略图；最多 6 张，可删除
@@ -457,7 +457,7 @@ docs/02-数据结构与系统架构说明.md 3.1 第 7 条
 
 【必须做到】
 - 图片压缩在前端完成，上传到服务端的文件不超过 500KB
-- 必填项校验与后端 zod schema 共用同一份定义（放 web/src/types/）
+- 必填项校验与后端 zod schema 共用同一份定义（放 project/front/src/types/）
 - 提交中按钮禁用，防重复提交
 
 【验收】
@@ -482,7 +482,7 @@ docs/02-数据结构与系统架构说明.md 3.1 第 7 条
 docs/01-项目需求说明书.md F2、§4.3 状态转换表
 
 【任务】
-1. server/src/routes/admin.ts：
+1. project/backend/src/routes/admin.ts：
    - GET /api/admin/items?status=&keyword=&page=&size=：按状态分组查询，
      返回含 donorName、donorStudentNo、submittedAt、totalQty。
    - POST /api/admin/items/:id/approve：仅 PENDING → RECEIVING，写 ItemLog(APPROVE)。
@@ -493,7 +493,7 @@ docs/01-项目需求说明书.md F2、§4.3 状态转换表
      note 为"申报 X 件，实收 Y 件"；生成入库编号 SR-YYYY-NNNN；写 ItemLog(RECEIVE)。
    - POST /api/admin/items/:id/offline：仅 ON_SHELF → OFFLINE；
      若存在未核销预约则返回 3006 且 message 带上待取消数量。
-2. web/src/views/admin/items/ItemListView.vue：
+2. project/front/src/views/admin/items/ItemListView.vue：
    5 个 Tab（待审核/待收货/在架/已驳回/已下架）带数量角标；
    表格列：勾选、图片、物品+登记人、品类、数量、提交时间、状态、操作；
    待审核行操作为"通过/驳回/详情"，待收货行操作为"收货确认/退回"，在架行有一个"下架"；
@@ -530,7 +530,7 @@ docs/01-项目需求说明书.md F5、§4.4 表中 E-03
 docs/02-数据结构与系统架构说明.md 5 章事务边界
 
 【任务】
-1. server/src/routes/admin.ts 增加 POST /api/admin/reservations/redeem：
+1. project/backend/src/routes/admin.ts 增加 POST /api/admin/reservations/redeem：
    · 入参 code（8 位）
    · 核销前先 sweepExpired 一次
    · 校验顺序：码不存在→2001；status=COLLECTED→3004（message 带首次核销时间与操作人）；
@@ -540,9 +540,9 @@ docs/02-数据结构与系统架构说明.md 5 章事务边界
      若 collectedQty === totalQty 则批次置 CLOSED 并写 ItemLog(CLOSE)、
      写 ItemLog(COLLECT)
    · 返回 { itemTitle, qty, collectedAt, itemClosed }
-2. server/src/routes/admin.ts 增加 GET /api/admin/reservations/today：
+2. project/backend/src/routes/admin.ts 增加 GET /api/admin/reservations/today：
    返回当日及之前所有 PENDING 预约，按 expireAt 升序，含 code/itemTitle/qty/expireAt/receiverName。
-3. web/src/views/admin/redeem/RedeemView.vue：
+3. project/front/src/views/admin/redeem/RedeemView.vue：
    - 左：8 位输入框（等宽字体、字距加宽、自动转大写并过滤空格）、核销按钮、
      成功结果卡（物品名/数量/领取人/批次剩余）、四类失败原因的展示区
    - 右：今日待领取列表（码/物品+数量/剩余时长），剩余不足 1 天的整行转红
@@ -573,12 +573,12 @@ docs/02-数据结构与系统架构说明.md 5 章事务边界
 【先读】大作业/原型/05-我的记录.html
 
 【任务】
-1. server/src/routes/my.ts：
+1. project/backend/src/routes/my.ts：
    - GET /api/my/donations：返回当前用户捐赠的批次，含 status、totalQty、collectedQty、
      available、rejectReason、submittedAt，按提交时间倒序。
    - GET /api/my/reservations：返回当前用户的预约，含 code、qty、expireAt、status、
      itemTitle、stationName，调用 sweepExpired('user') 后再查。
-2. web/src/views/my-records/RecordsView.vue：
+2. project/front/src/views/my-records/RecordsView.vue：
    - 双 Tab：我捐的 / 我领的，Tab 带数量角标；默认落在「我领的」，
      无预约记录时回退到「我捐的」
    - 我捐的：列表行含缩略图、标题、状态徽标、数量与已被领走数、驿站、操作按钮；
@@ -617,7 +617,7 @@ docs/01-项目需求说明书.md F7、附录 10
 口径见本 Prompt 第 2 条。
 
 【任务】
-1. server/src/routes/stats.ts：GET /api/admin/stats/overview?range=quarter
+1. project/backend/src/routes/stats.ts：GET /api/admin/stats/overview?range=quarter
    **一次请求返回全部指标**，服务端聚合，前端不做二次计算：
    - categoryDistribution：按已核销件数分组，返回 [{ name, count, percent, color }]
    - monthlyFlow：近 6 个月每月核销件数 [{ month, count }]
@@ -625,7 +625,7 @@ docs/01-项目需求说明书.md F7、附录 10
    - carbonTotal：Σ(品类 weightPerUnitKg × co2FactorPerKg × collectedQty)
    - funnel：提交数 / 审核通过数 / 上架数 / 产生预约数 / 完成核销数
    - kpi：在架批次数、本季核销件数、平均在架天数
-2. web/src/views/admin/dashboard/DashboardView.vue：
+2. project/front/src/views/admin/dashboard/DashboardView.vue：
    - 顶部 4 个 KPI 卡（在架批次/本季核销/碳减排累计/平均在架天数），带环比
    - 环形图（品类分布）用 conic-gradient 或 ECharts 实现，配图例显示件数与占比
    - 柱状图（月度流转量）用 ECharts，6 根柱
@@ -710,7 +710,7 @@ docs/01-项目需求说明书.md F7、附录 10
 【先读】docs/02-数据结构与系统架构说明.md 6.4、S3-08 已完成的捐赠表单
 
 【任务】
-1. 把捐赠、登录、驳回原因、收货数量四处的 zod schema 收敛到 web/src/types/ 下，
+1. 把捐赠、登录、驳回原因、收货数量四处的 zod schema 收敛到 project/front/src/types/ 下，
    前后端 import 同一份，不允许两份定义。
 2. 每个字段错误文案改成"具体规则"而不是"格式不正确"：
    例：标题 → "标题至少 4 个字，请写清物品名称与规格"
