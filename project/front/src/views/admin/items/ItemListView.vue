@@ -277,6 +277,7 @@ import {
   ElDialog,
   ElInput,
   ElInputNumber,
+  ElLoadingDirective,
   ElMessage,
   ElMessageBox,
   ElOption,
@@ -288,6 +289,9 @@ import {
 } from 'element-plus'
 import { fetchAdminItems, approveItem, rejectItem, receiveItem, offlineItem } from '@/api/admin'
 import { BizError, CONDITION_TEXT, ITEM_STATUS_TEXT, type AdminItemRow } from '@/types'
+
+// script setup 约定：v 开头的局部变量会被识别为模板指令
+const vLoading = ElLoadingDirective
 
 const PAGE_SIZE = 10
 

@@ -183,6 +183,12 @@ async function loadToday(): Promise<void> {
 
 /** 输入即时归一化：转大写并过滤空格/连字符等（防从聊天记录复制带格式） */
 function sanitize(): void {
+  // 用户开始输入新码时，取消上一次成功结果的自动清空，避免误清当前输入
+  if (resetTimer) {
+    clearTimeout(resetTimer)
+    resetTimer = null
+    result.value = null
+  }
   const raw = code.value.toUpperCase().replace(/[^A-Z0-9]/g, '')
   code.value = raw.slice(0, 8)
   failure.value = null
@@ -204,6 +210,10 @@ function scheduleAutoReset(): void {
 
 async function tryRedeem(): Promise<void> {
   if (code.value.length < 8 || submitting.value) return
+  if (resetTimer) {
+    clearTimeout(resetTimer)
+    resetTimer = null
+  }
   submitting.value = true
   result.value = null
   failure.value = null
