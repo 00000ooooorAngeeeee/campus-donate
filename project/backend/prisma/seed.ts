@@ -289,7 +289,8 @@ async function main() {
     created.push({ id: item.id, status, totalQty, shelfAt })
 
     // 每条批次至少一条日志；通过审核的补齐链路
-    const logs = [
+    // 显式标注可空字段，避免数组字面量把 fromStatus/note 推断成 null 只读类型
+    const logs: { action: string; fromStatus: string | null; toStatus: string; createdAt: Date; note: string | null }[] = [
       { action: 'SUBMIT', fromStatus: null, toStatus: 'PENDING', createdAt: submittedAt, note: null },
     ]
     if (status === 'REJECTED') {
