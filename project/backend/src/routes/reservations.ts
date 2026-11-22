@@ -138,16 +138,20 @@ router.post(
         throw new BizError(ERR.BAD_STATE, '仅待领取的预约可以取消')
       }
 
-      await prisma.$transaction([
-        prisma.reservation.update({
-          where: { id },
+      await prisma.$transaction(async (tx) => {
+        // 条件更新：并发下重复取消只会有一次成功，避免 reservedQty 被扣两次
+        const moved = await tx.reservation.updateMany({
+          where: { id, status: 'PENDING' },
           data: { status: 'CANCELLED', cancelledAt: new Date(), cancelReason: '学生取消' },
-        }),
-        prisma.item.update({
+        })
+        if (moved.count === 0) {
+          throw new BizError(ERR.BAD_STATE, '该预约状态已变化，请刷新后重试')
+        }
+        await tx.item.update({
           where: { id: r.itemId },
           data: { reservedQty: { decrement: r.qty } },
-        }),
-        prisma.itemLog.create({
+        })
+        await tx.itemLog.create({
           data: {
             itemId: r.itemId,
             reservationId: id,
@@ -158,8 +162,8 @@ router.post(
             toStatus: 'CANCELLED',
             operatorId: userId,
           },
-        }),
-      ])
+        })
+      })
       res.json(ok({ id, status: 'CANCELLED' }))
     } catch (e) {
       next(e)

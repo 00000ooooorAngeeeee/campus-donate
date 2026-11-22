@@ -154,9 +154,14 @@ router.post('/items/:id/approve', async (req, res, next) => {
       throw new BizError(ERR.BAD_STATE, '仅待审核的批次可通过审核')
     }
     const adminId = req.user!.id
-    await prisma.$transaction([
-      prisma.item.update({ where: { id }, data: { status: 'RECEIVING' } }),
-      prisma.itemLog.create({
+    // 条件更新兜底并发：状态在事务外校验过，但事务内仍需以 where 保证只流转一次
+    await prisma.$transaction(async (tx) => {
+      const moved = await tx.item.updateMany({
+        where: { id, status: 'PENDING' },
+        data: { status: 'RECEIVING' },
+      })
+      if (moved.count === 0) throw new BizError(ERR.BAD_STATE, '批次状态已变化，请刷新后重试')
+      await tx.itemLog.create({
         data: {
           itemId: id,
           scope: 'BATCH',
@@ -165,8 +170,8 @@ router.post('/items/:id/approve', async (req, res, next) => {
           toStatus: 'RECEIVING',
           operatorId: adminId,
         },
-      }),
-    ])
+      })
+    })
     res.json(ok({ id, status: 'RECEIVING' }))
   } catch (e) {
     next(e)
@@ -185,9 +190,13 @@ router.post('/items/:id/reject', validate({ body: rejectSchema }), async (req, r
     }
     const isReturn = item.status === 'RECEIVING'
     const adminId = req.user!.id
-    await prisma.$transaction([
-      prisma.item.update({ where: { id }, data: { status: 'REJECTED', rejectReason: reason } }),
-      prisma.itemLog.create({
+    await prisma.$transaction(async (tx) => {
+      const moved = await tx.item.updateMany({
+        where: { id, status: { in: ['PENDING', 'RECEIVING'] } },
+        data: { status: 'REJECTED', rejectReason: reason },
+      })
+      if (moved.count === 0) throw new BizError(ERR.BAD_STATE, '批次状态已变化，请刷新后重试')
+      await tx.itemLog.create({
         data: {
           itemId: id,
           scope: 'BATCH',
@@ -197,8 +206,8 @@ router.post('/items/:id/reject', validate({ body: rejectSchema }), async (req, r
           operatorId: adminId,
           note: isReturn ? `退回：${reason}` : reason,
         },
-      }),
-    ])
+      })
+    })
     res.json(ok({ id, status: 'REJECTED' }))
   } catch (e) {
     next(e)
@@ -225,8 +234,9 @@ router.post('/items/:id/receive', validate({ body: receiveSchema }), async (req,
     const adminId = req.user!.id
     const adjusted = actualQty !== item.totalQty
     await prisma.$transaction(async (tx) => {
-      await tx.item.update({
-        where: { id },
+      // 条件更新：防止双击/并发导致同一批次被重复收货、生成两个入库编号
+      const moved = await tx.item.updateMany({
+        where: { id, status: 'RECEIVING' },
         data: {
           totalQty: actualQty,
           status: 'ON_SHELF',
@@ -235,6 +245,7 @@ router.post('/items/:id/receive', validate({ body: receiveSchema }), async (req,
           shelfAt: new Date(),
         },
       })
+      if (moved.count === 0) throw new BizError(ERR.BAD_STATE, '批次状态已变化，请刷新后重试')
       // 数量修正必须留痕，不做静默修改（原型 06 交互说明第 4 条）
       if (adjusted) {
         await tx.itemLog.create({
@@ -283,9 +294,13 @@ router.post('/items/:id/offline', async (req, res, next) => {
       throw new BizError(ERR.OFFLINE_BLOCKED, `有 ${pending} 个预约未领取，需先取消后才能下架`)
     }
     const adminId = req.user!.id
-    await prisma.$transaction([
-      prisma.item.update({ where: { id }, data: { status: 'OFFLINE' } }),
-      prisma.itemLog.create({
+    await prisma.$transaction(async (tx) => {
+      const moved = await tx.item.updateMany({
+        where: { id, status: 'ON_SHELF' },
+        data: { status: 'OFFLINE' },
+      })
+      if (moved.count === 0) throw new BizError(ERR.BAD_STATE, '批次状态已变化，请刷新后重试')
+      await tx.itemLog.create({
         data: {
           itemId: id,
           scope: 'BATCH',
@@ -294,8 +309,8 @@ router.post('/items/:id/offline', async (req, res, next) => {
           toStatus: 'OFFLINE',
           operatorId: adminId,
         },
-      }),
-    ])
+      })
+    })
     res.json(ok({ id, status: 'OFFLINE' }))
   } catch (e) {
     next(e)
@@ -355,10 +370,14 @@ router.post(
       const itemClosed = r.item.collectedQty + r.qty >= r.item.totalQty
 
       await prisma.$transaction(async (tx) => {
-        await tx.reservation.update({
-          where: { id: r.id },
+        // 事务内条件更新：两名管理员同时核销同一单时，只有一次能成功扣减账目
+        const moved = await tx.reservation.updateMany({
+          where: { id: r.id, status: 'PENDING' },
           data: { status: 'COLLECTED', collectedAt, collectedBy: adminId },
         })
+        if (moved.count === 0) {
+          throw new BizError(ERR.DUPLICATE_REDEEM, '该预约刚刚已被处理，请勿重复操作')
+        }
         await tx.item.update({
           where: { id: r.itemId },
           data: {
