@@ -46,3 +46,4 @@ desktop.ini
 
 # 不入库：原型的打包副本（与 prototype/ 目录内容重复）
 /原型.zip
+/.workbuddy
