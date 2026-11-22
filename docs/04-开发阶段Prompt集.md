@@ -3,7 +3,7 @@
 > 对应《Web前端开发技术与UI设计》选题与实施指南「六、推荐开发流程」
 > 覆盖阶段 3（核心功能开发）、阶段 4（体验与工程完善）、阶段 5（演示与总结）
 > 配套文档：《01-项目需求说明书》《02-数据结构与系统架构说明》《03-三人分工与贡献说明》
-> 原型基准：`prototype/` 下 10 个 HTML
+> 原型基准：`../prototype` 下 10 个 HTML
 
 ---
 
@@ -24,9 +24,9 @@
 
 | 归属 | 独占目录 / 文件 | 说明 |
 | --- | --- | --- |
-| **A** | `project/backend/prisma/**`、`project/backend/src/lib/**`、`project/backend/src/middleware/**`、`project/backend/src/routes/admin.ts`、`project/backend/src/routes/reservations.ts`、`project/front/src/views/admin/items/`、`project/front/src/views/admin/redeem/` | schema 唯一修改人，其他人只能读 |
-| **B** | `project/front/src/views/discover/`、`item-detail/`、`donate/`、`my-records/`、`project/front/src/components/**`、`project/front/src/styles/**`、`project/backend/src/routes/items.ts`、`project/backend/src/routes/my.ts` | 组件与样式归 B，A/C 复用但不要改 |
-| **C** | `project/front/src/views/admin/dashboard/`、`project/front/src/views/login/`、`project/front/src/api/auth.ts`、`project/backend/src/routes/auth.ts`、`project/backend/src/routes/stats.ts`、`docs/**` | 文档与看板归 C |
+| **A** | `project/backend/prisma/**`、`project/backend/src/lib/**`、`project/backend/src/middleware/**`、`project/backend/src/routes/admin.ts`、`project/backend/src/routes/reservations.ts`、`../project/front/src/views/admin/items`、`project/front/src/views/admin/redeem/` | schema 唯一修改人，其他人只能读 |
+| **B** | `../project/front/src/views/discover`、`item-detail/`、`donate/`、`my-records/`、`project/front/src/components/**`、`project/front/src/styles/**`、`project/backend/src/routes/items.ts`、`project/backend/src/routes/my.ts` | 组件与样式归 B，A/C 复用但不要改 |
+| **C** | `../project/front/src/views/admin/dashboard`、`project/front/src/views/login/`、`project/front/src/api/auth.ts`、`project/backend/src/routes/auth.ts`、`project/backend/src/routes/stats.ts`、`docs/**` | 文档与看板归 C |
 | 共用只读 | `project/backend/src/index.ts`、`project/front/src/router/**`、`project/front/src/api/http.ts`、`project/front/src/stores/**` | 需要改动时先在群里说一声，由 A 统一改 |
 
 ---
